@@ -1,0 +1,35 @@
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Auth } from '../../services/auth';
+
+@Component({
+  selector: 'app-login',
+  imports: [ReactiveFormsModule],
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
+})
+export class Login {
+  private authService = inject(Auth);
+
+  protected loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
+  });
+
+  protected onSubmit(): void {
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (response) => {
+          console.log('Login realizado com sucesso!', response);
+          localStorage.setItem('cinematch_token', response.access_token);
+          alert('Login realizado com sucesso!');
+          this.loginForm.reset();
+        },
+        error: (error) => {
+          console.error('Erro ao realizar login!', error);
+          alert('Erro ao realizar login. Verifique os dados.');
+        },
+      });
+    }
+  }
+}

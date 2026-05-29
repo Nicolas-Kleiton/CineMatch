@@ -1,0 +1,29 @@
+<div class="login-container">
+  <h2>Entrar no CineMatch</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <input 
+        id="email" 
+        type="email" 
+        formControlName="email" 
+        placeholder="E-mail"
+      />
+    </div>
+
+    <div class="form-group">
+      <input 
+        id="password" 
+        type="password" 
+        formControlName="password" 
+        placeholder="Senha"
+      />
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid">
+      Entrar
+    </button>
+
+  </form>
+</div>
