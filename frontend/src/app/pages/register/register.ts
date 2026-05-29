@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-register',
-  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
@@ -12,6 +12,7 @@ import { Auth } from '../../services/auth';
 export class Register {
 
   private authService = inject(Auth);
+  private router = inject(Router);
 
   protected registerForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -24,8 +25,11 @@ export class Register {
       this.authService.register(this.registerForm.value).subscribe({
         next: (response) => {
           console.log('Usuário cadastrado com sucesso!', response);
+
           alert('Cadastro realizado com sucesso!');
           this.registerForm.reset();
+
+          this.router.navigate(['/login']);
         },
         error: (error) => {
           console.error('Erro ao cadastrar usuário!', error);

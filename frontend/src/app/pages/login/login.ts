@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
 @Component({
@@ -10,6 +11,7 @@ import { Auth } from '../../services/auth';
 })
 export class Login {
   private authService = inject(Auth);
+  private router = inject(Router);
 
   protected loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -22,8 +24,11 @@ export class Login {
         next: (response) => {
           console.log('Login realizado com sucesso!', response);
           localStorage.setItem('cinematch_token', response.access_token);
+
           alert('Login realizado com sucesso!');
           this.loginForm.reset();
+
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Erro ao realizar login!', error);
