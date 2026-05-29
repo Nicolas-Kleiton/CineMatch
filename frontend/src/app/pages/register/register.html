@@ -1,0 +1,38 @@
+<div class="register-container">
+  <h2>Criar Conta - CineMatch</h2>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <input 
+        id="name" 
+        type="text" 
+        formControlName="name" 
+        placeholder="Nome"
+      />
+    </div>
+
+    <div class="form-group">
+      <input 
+        id="email" 
+        type="email" 
+        formControlName="email" 
+        placeholder="E-mail"
+      />
+    </div>
+
+    <div class="form-group">
+      <input 
+        id="password" 
+        type="password" 
+        formControlName="password" 
+        placeholder="Senha"
+      />
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid">
+      Registar
+    </button>
+
+  </form>
+</div>
