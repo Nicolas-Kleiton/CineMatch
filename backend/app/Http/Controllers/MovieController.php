@@ -24,4 +24,30 @@ class MovieController extends Controller
 
             return response()->json(['error' => 'Não foi possível buscar os filmes'], 500);
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->query('query');
+        
+        if(!$query){
+            return response()->json(['error'=> ''],404);
+        }
+
+        $token = env('TMDB_BEARER_TOKEN');
+        $baseUrl = env('TMDB_BASE_URL');
+
+        $response = Http::withToken($token)
+            ->get("{$baseUrl}/search/movie", [
+                'language' => 'pt-BR',
+                'query' => $query,
+                'page' => 1,
+                'include_adult' => false,
+            ]);
+
+            if ($response->successful()) {
+                return response()->json($response->json()['results']);
+            }
+
+            return response()->json(['error'=> 'Não foi possível buscar os filmes'], 500);
+    }
 }
