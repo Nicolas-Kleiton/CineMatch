@@ -22,6 +22,8 @@ export class Dashboard implements OnInit, OnDestroy {
   public filmesSelecionados = signal<any[]>([]);
   public filmeSorteado = signal<any | null>(null);
   public estaSorteando = signal<boolean>(false);
+  public mostrarSetaEsquerda = signal<boolean>(false);
+  public mostrarSetaDireita = signal<boolean>(true);
 
   private pesquisadorSubject = new Subject<string>();
   private pesquisaSubscription!: Subscription;
@@ -50,9 +52,11 @@ export class Dashboard implements OnInit, OnDestroy {
     this.movieService.getPopularMovies().subscribe({
       next: (filmes) => {
         this.SampleMovies.set(filmes);
+        this.mostrarSetaEsquerda.set(false);
+        this.mostrarSetaDireita.set(true);
       },
       error: (erro) => {
-        console.error('Erro ao buscar filmes do backend Laravel:', erro);
+        console.error('Erro ao buscar filmes populares:', erro);
       }
     });
   }
@@ -66,7 +70,7 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   /**
-   * Executa de fato a requisição para a rota de busca no Laravel
+   * Executa a requisição para a rota de busca no Laravel
    */
   private executarBuscaNoBackend(termo: string): void {
     if (termo === '') {
@@ -75,8 +79,18 @@ export class Dashboard implements OnInit, OnDestroy {
     }
 
     this.movieService.searchMovies(termo).subscribe({
-      next: (resultados) => this.SampleMovies.set(resultados),
-      error: (erro) => console.error('Erro na pesquisa via Laravel:', erro)
+      next: (resultados) => {
+        this.SampleMovies.set(resultados);
+
+        const container = document.querySelector('.carousel-container') as HTMLElement;
+        if (container) {
+          container.scrollLeft = 0;
+          setTimeout(() => this.checarLimitesScroll(container), 50);
+        }
+      },
+      error: (erro) => {
+        console.error('Erro na pesquisa via Laravel:', erro);
+      }
     });
   }
 
@@ -148,6 +162,13 @@ export class Dashboard implements OnInit, OnDestroy {
     this.filmeSorteado.set(null);
   }
 
+  public checarLimitesScroll(container: HTMLElement): void {
+    this.mostrarSetaEsquerda.set(container.scrollLeft > 5);
+    const temConteudoParaRolar = container.scrollWidth > container.clientWidth;
+    const chegouAoFim = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
+    this.mostrarSetaDireita.set(temConteudoParaRolar && !chegouAoFim);
+  }
+
   /**
    * Controla o deslocamento horizontal do carrossel
    */
@@ -156,6 +177,8 @@ export class Dashboard implements OnInit, OnDestroy {
       left: distancia,
       behavior: 'smooth'
     });
+
+    setTimeout(() => this.checarLimitesScroll(elemento), 350);
   }
 
   /**

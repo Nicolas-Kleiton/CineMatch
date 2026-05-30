@@ -31,10 +31,13 @@
 
       <div class="carousel-wrapper">
         
-        <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -400)" title="Voltar">⟨</button>
+        @if (mostrarSetaEsquerda()) {
+          <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -400)" title="Voltar">⟨</button>
+        }
         
-        <div class="carousel-container" #carrossel>
+        <div class="carousel-container" #carrossel (scroll)="checarLimitesScroll(carrossel)">
           <div class="movies-carousel">
+            
             @for (filme of SampleMovies(); track filme.id) {
               <div class="mini-movie-card">
                 <div class="mini-poster-wrapper">
@@ -52,24 +55,24 @@
                 <p>Nenhum filme encontrado com o nome "{{ termoPesquisa() }}". Tente outra palavra-chave!</p>
               </div>
             }
+
           </div>
         </div>
 
-        <button class="arrow-btn right" (click)="moverCarrossel(carrossel, 400)" title="Avançar">⟩</button>
+        @if (mostrarSetaDireita()) {
+          <button class="arrow-btn right" (click)="moverCarrossel(carrossel, 400)" title="Avançar">⟩</button>
+        }
 
       </div>
     </section>
 
     <section class="session-section">
-      
       @if (!filmeSorteado() && !estaSorteando()) {
-        
         <div class="session-actions-bar">
           <div class="session-title">
             <h2>🍿 Filmes Selecionados para Assistir</h2>
             <p>Monte a lista com seus amigos e clique em sortear</p>
           </div>
-          
           <div class="action-buttons">
             <button 
               class="btn-primary" 
@@ -80,7 +83,6 @@
             </button>
           </div>
         </div>
-
         <div class="selected-movies-list">
           @for (filme of filmesSelecionados(); track filme.id) {
             <div class="selected-movie-item">
@@ -97,18 +99,13 @@
             </div>
           }
         </div>
-
       }
-
       @if (estaSorteando() || (filmeSorteado() && !estaSorteando())) {
-        
         <div class="winner-overlay">
           <div class="winner-card" [class.spinning]="estaSorteando()">
-            
             <div class="winner-header">
               <span>{{ estaSorteando() ? '🎰 ROLANDO A ROLETA...' : '🎉 O FILME ESCOLHIDO FOI:' }}</span>
             </div>
-
             <div class="winner-content">
               <img 
                 [src]="filmeSorteado()?.poster_path ? 'https://image.tmdb.org/t/p/w200' + filmeSorteado().poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
@@ -118,10 +115,8 @@
               <div class="winner-info">
                 <h3>{{ filmeSorteado()?.title }}</h3>
                 <p class="winner-meta">Lançamento: {{ filmeSorteado()?.release_date | date:'yyyy' }} | Nota: ⭐ {{ filmeSorteado()?.vote_average | number:'1.1-1' }}</p>
-                
                 @if (!estaSorteando()) {
                   <p class="winner-overview">{{ filmeSorteado()?.overview || 'Sinopse não disponível.' }}</p>
-                  
                   <div class="winner-actions">
                     <button class="btn-primary btn-retry" (click)="fecharSorteio()">🔄 Sortear Novamente</button>
                   </div>
