@@ -1,8 +1,79 @@
 <div class="dashboard-container">
-  <h2>Bem-vindo ao CineMatch! 🎬</h2>
-  <p>Este é o teu painel principal de filmes.</p>
+  <header class="dashboard-header">
+    <div class="brand">
+      <h1>CineMatch 🎬</h1>
+    </div>
+    <div class="user-actions">
+      <button (click)="logout()" class="btn-logout">Sair da Conta</button>
+    </div>
+  </header>
 
-  <button (click)="logout()" class="btn-logout">
-    Sair da Conta
-  </button>
+  <main class="dashboard-main">
+    
+    <section class="suggestions-section">
+      <div class="section-header">
+        <h3>Os mais populares no momento 🎬</h3>
+        <p>Clique no "+" para adicionar um filme à lista de votação do grupo</p>
+      </div>
+
+      <div class="carousel-wrapper">
+        
+        <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -300)" title="Voltar">⟨</button>
+        
+        <div class="carousel-container" #carrossel>
+          <div class="movies-carousel">
+            @for (filme of SampleMovies(); track filme.id) {
+              <div class="mini-movie-card">
+                <div class="mini-poster-wrapper">
+                  <img [src]="'https://image.tmdb.org/t/p/w300' + filme.poster_path" [alt]="filme.title" />
+                  <button class="btn-add-to-list" title="Adicionar à lista">＋</button>
+                  <span class="mini-rating">⭐ {{ filme.vote_average | number:'1.1-1' }}</span>
+                </div>
+                <h4>{{ filme.title }}</h4>
+              </div>
+            }
+          </div>
+        </div>
+
+        <button class="arrow-btn right" (click)="moverCarrossel(carrossel, 300)" title="Avançar">⟩</button>
+
+      </div>
+    </section>
+
+    <section class="session-section">
+      <div class="session-actions-bar">
+        <div class="session-title">
+          <h2>🍿 Filmes Selecionados para Assistir</h2>
+          <p>Monte a lista com seus amigos e clique em sortear</p>
+        </div>
+        
+        <div class="action-buttons">
+          <button class="btn-primary btn-dice">🎲 Sortear Filme</button>
+        </div>
+      </div>
+
+      <div class="selected-movies-list">
+        
+        <div class="selected-movie-item">
+          <div class="movie-details">
+            <span class="movie-name">Mortal Kombat 2</span>
+            <span class="movie-year">(2026)</span>
+            <span class="movie-badge">⭐ 8.1</span>
+          </div>
+          <button class="btn-remove">Remover</button>
+        </div>
+
+        <div class="selected-movie-item">
+          <div class="movie-details">
+            <span class="movie-name">Star Wars: O Mandaloriano e Grogu</span>
+            <span class="movie-year">(2026)</span>
+            <span class="movie-badge">⭐ 8.4</span>
+          </div>
+          <button class="btn-remove">Remover</button>
+        </div>
+
+        </div>
+    </section>
+
+  </main>
 </div>
