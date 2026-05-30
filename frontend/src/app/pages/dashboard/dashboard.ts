@@ -19,6 +19,9 @@ export class Dashboard implements OnInit, OnDestroy {
 
   public SampleMovies = signal<any[]>([]);
   public termoPesquisa = signal<string>('');
+  public filmesSelecionados = signal<any[]>([]);
+  public filmeSorteado = signal<any | null>(null);
+  public estaSorteando = signal<boolean>(false);
 
   private pesquisadorSubject = new Subject<string>();
   private pesquisaSubscription!: Subscription;
@@ -84,6 +87,65 @@ export class Dashboard implements OnInit, OnDestroy {
     if (this.pesquisaSubscription) {
       this.pesquisaSubscription.unsubscribe();
     }
+  }
+
+  /**
+   * Adiciona um filme à lista de filmes selecionados
+   */
+
+  public adicionarFilmeALista(filme: any): void {
+    const jaExiste = this.filmesSelecionados().some(item => item.id === filme.id);
+
+    if (jaExiste) {
+      alert(`O filme "${filme.title}" já está na sua lista de votação!`);
+      return;
+    }
+    this.filmesSelecionados.set([...this.filmesSelecionados(), filme]);
+  }
+
+    /**
+   * Remove um filme da lista de filmes selecionados
+   */
+
+  public removerFilmeDaLista(filmeId: number): void {
+    const listaFiltrada = this.filmesSelecionados().filter(item => item.id !== filmeId);
+    this.filmesSelecionados.set(listaFiltrada);
+  }
+
+  /**
+   * Realiza o sorteio aleatório com efeito de roleta
+   */
+  public sortearFilme(): void {
+    const lista = this.filmesSelecionados();
+
+    if (lista.length === 0) {
+      alert('Adicione pelo menos um filme à lista antes de sortear!');
+      return;
+    }
+
+    this.estaSorteando.set(true);
+    this.filmeSorteado.set(null);
+
+    let contador = 0;
+    const totalGiros = 15;
+
+    // Cria um intervalo que roda a cada 100ms mudando o filme focado
+    const intervalo = setInterval(() => {
+      const indiceAleatorio = Math.floor(Math.random() * lista.length);
+      this.filmeSorteado.set(lista[indiceAleatorio]);
+      contador++;
+      if (contador >= totalGiros) {
+        clearInterval(intervalo);
+        this.estaSorteando.set(false);
+      }
+    }, 100);
+  }
+
+  /**
+   * Limpa o filme sorteado da tela para fechar o destaque
+   */
+  public fecharSorteio(): void {
+    this.filmeSorteado.set(null);
   }
 
   /**

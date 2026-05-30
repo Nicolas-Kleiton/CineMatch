@@ -42,7 +42,7 @@
                     [src]="filme.poster_path ? 'https://image.tmdb.org/t/p/w300' + filme.poster_path : 'https://placehold.co/300x450/e2e0e8/6a677a?text=Sem+Cartaz'" 
                     [alt]="filme.title" 
                   />
-                  <button class="btn-add-to-list" title="Adicionar à lista">＋</button>
+                  <button class="btn-add-to-list" (click)="adicionarFilmeALista(filme)" title="Adicionar à lista">＋</button>
                   <span class="mini-rating">⭐ {{ (filme.vote_average | number:'1.1-1') || '0.0' }}</span>
                 </div>
                 <h4>{{ filme.title }}</h4>
@@ -61,39 +61,77 @@
     </section>
 
     <section class="session-section">
-      <div class="session-actions-bar">
-        <div class="session-title">
-          <h2>🍿 Filmes Selecionados para Assistir</h2>
-          <p>Monte a lista com seus amigos e clique em sortear</p>
-        </div>
+      
+      @if (!filmeSorteado() && !estaSorteando()) {
         
-        <div class="action-buttons">
-          <button class="btn-primary">🎲 Sortear Filme</button>
+        <div class="session-actions-bar">
+          <div class="session-title">
+            <h2>🍿 Filmes Selecionados para Assistir</h2>
+            <p>Monte a lista com seus amigos e clique em sortear</p>
+          </div>
+          
+          <div class="action-buttons">
+            <button 
+              class="btn-primary" 
+              (click)="sortearFilme()" 
+              [disabled]="filmesSelecionados().length === 0"
+            >
+              🎲 Sortear Filme
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div class="selected-movies-list">
+        <div class="selected-movies-list">
+          @for (filme of filmesSelecionados(); track filme.id) {
+            <div class="selected-movie-item">
+              <div class="movie-details">
+                <span class="movie-name">{{ filme.title }}</span>
+                <span class="movie-year">({{ filme.release_date | date:'yyyy' }})</span>
+                <span class="movie-badge">⭐ {{ (filme.vote_average | number:'1.1-1') || '0.0' }}</span>
+              </div>
+              <button class="btn-remove" (click)="removerFilmeDaLista(filme.id)">Remover</button>
+            </div>
+          } @empty {
+            <div class="empty-list-feedback">
+              <p>Nenhum filme selecionado ainda. Monte a sua sessão! 🎬</p>
+            </div>
+          }
+        </div>
+
+      }
+
+      @if (estaSorteando() || (filmeSorteado() && !estaSorteando())) {
         
-        <div class="selected-movie-item">
-          <div class="movie-details">
-            <span class="movie-name">Mortal Kombat 2</span>
-            <span class="movie-year">(2026)</span>
-            <span class="movie-badge">⭐ 8.1</span>
-          </div>
-          <button class="btn-remove">Remover</button>
-        </div>
+        <div class="winner-overlay">
+          <div class="winner-card" [class.spinning]="estaSorteando()">
+            
+            <div class="winner-header">
+              <span>{{ estaSorteando() ? '🎰 ROLANDO A ROLETA...' : '🎉 O FILME ESCOLHIDO FOI:' }}</span>
+            </div>
 
-        <div class="selected-movie-item">
-          <div class="movie-details">
-            <span class="movie-name">Star Wars: O Mandaloriano e Grogu</span>
-            <span class="movie-year">(2026)</span>
-            <span class="movie-badge">⭐ 8.4</span>
-          </div>
-          <button class="btn-remove">Remover</button>
-        </div>
+            <div class="winner-content">
+              <img 
+                [src]="filmeSorteado()?.poster_path ? 'https://image.tmdb.org/t/p/w200' + filmeSorteado().poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
+                [alt]="filmeSorteado()?.title"
+                class="winner-poster"
+              />
+              <div class="winner-info">
+                <h3>{{ filmeSorteado()?.title }}</h3>
+                <p class="winner-meta">Lançamento: {{ filmeSorteado()?.release_date | date:'yyyy' }} | Nota: ⭐ {{ filmeSorteado()?.vote_average | number:'1.1-1' }}</p>
+                
+                @if (!estaSorteando()) {
+                  <p class="winner-overview">{{ filmeSorteado()?.overview || 'Sinopse não disponível.' }}</p>
+                  
+                  <div class="winner-actions">
+                    <button class="btn-primary btn-retry" (click)="fecharSorteio()">🔄 Sortear Novamente</button>
+                  </div>
+                }
+              </div>
+            </div>
 
-      </div>
+          </div>
+        </div>
+      }
     </section>
-
   </main>
 </div>
