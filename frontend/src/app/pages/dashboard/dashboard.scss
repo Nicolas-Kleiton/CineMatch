@@ -1,10 +1,10 @@
-$bg-dark: #f8f9fa;       // Fundo geral do app (cinza bem claro)
-$bg-card: #ffffff;       // Branco puro para destacar os blocos principais
-$text-main: #1c1b22;     // Grafite escuro para alta leitura de títulos
-$text-support: #6a677a;  // Cinza médio para textos de suporte e descrições
-$primary: #6200ee;       // Roxo principal para elementos de ação
-$primary-hover: #7f39fb; // Roxo vibrante para estados de hover
-$rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
+$bg-dark: #f8f9fa;       
+$bg-card: #ffffff;       
+$text-main: #1c1b22;     
+$text-support: #6a677a;  
+$primary: #6200ee;       
+$primary-hover: #7f39fb; 
+$rating-gold: #e65100;   
 
 .dashboard-container {
   min-height: 100vh;
@@ -15,7 +15,7 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
   flex-direction: column;
 }
 
-// Cabeçalho Principal
+// Layout do Topo
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -24,11 +24,14 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
   background-color: $bg-card;
   border-bottom: 1px solid #e2e0e8;
 
-  .brand h1 {
+.brand h1 {
     font-size: 1.6rem;
     font-weight: 800;
     margin: 0;
     background: linear-gradient(45deg, $primary, $primary-hover);
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
   }
 
   .btn-logout {
@@ -48,11 +51,11 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
   }
 }
 
-// Área de Conteúdo Expandida para Telas Largas
+// Distribuição do Espaço Principal (Telas Largas)
 .dashboard-main {
   flex: 1;
   padding: 2rem;
-  max-width: 1600px; // Espaço ampliado para melhor distribuição
+  max-width: 1600px; 
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
@@ -61,13 +64,47 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
   gap: 2.5rem;
 }
 
-.section-header {
-  margin-bottom: 1rem;
-  h3 { font-size: 1.2rem; margin: 0 0 0.2rem 0; font-weight: 700; }
-  p { color: $text-support; font-size: 0.85rem; margin: 0; }
+// Alinhamento Lado a Lado do Título e da Busca
+.section-header-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+
+  .section-title {
+    h3 { font-size: 1.2rem; margin: 0 0 0.2rem 0; font-weight: 700; }
+    p { color: $text-support; font-size: 0.85rem; margin: 0; }
+  }
 }
 
-// Estrutura do Carrossel com Setas Flutuantes
+// Caixa e Campo de Entrada de Busca
+.search-box {
+  width: 100%;
+  max-width: 350px;
+}
+
+.input-search {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background-color: #ffffff;
+  border: 1px solid #d1ceda;
+  border-radius: 6px;
+  color: $text-main;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &::placeholder { color: $text-support; }
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 8px rgba($primary, 0.2);
+  }
+}
+
+// Mecanismo Oculto de Scroll com Setas Laterais Visíveis
 .carousel-wrapper {
   position: relative;
   width: 100%;
@@ -77,7 +114,7 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
 
 .carousel-container {
   width: 100%;
-  overflow-x: hidden; // Oculta a barra de rolagem cinza nativa
+  overflow-x: hidden; 
   scroll-behavior: smooth;
   padding: 0.5rem 0;
 }
@@ -85,11 +122,10 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
 .movies-carousel {
   display: flex;
   gap: 1.2rem;
-  width: max-content; // Trava os elementos todos em uma única linha longa
+  width: max-content; 
   padding: 0 10px;
 }
 
-// Botões das Setas de Navegação Lateral
 .arrow-btn {
   position: absolute;
   top: 50%;
@@ -117,13 +153,13 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
     transform: translateY(-50%) scale(1.1);
   }
 
-  &.left { left: -20px; } // Levemente projetados para fora do alinhamento
+  &.left { left: -20px; }
   &.right { right: -20px; }
 }
 
-// Cartão Compacto Redimensionado
+// Cartão e Elementos Internos de Mídia
 .mini-movie-card {
-  width: 160px; // Largura expandida para melhor presença visual
+  width: 160px; 
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -135,14 +171,14 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; // Corta títulos gigantes de uma linha usando "..."
+    text-overflow: ellipsis;
   }
 }
 
 .mini-poster-wrapper {
   position: relative;
   width: 100%;
-  height: 240px; // Altura proporcional ajustada para o novo tamanho
+  height: 240px; 
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0,0,0,0.06);
@@ -192,7 +228,7 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
   }
 }
 
-// Área da Sessão Atual e Sorteio
+// Painel Operacional de Escolhas
 .session-section {
   background-color: $bg-card;
   border-radius: 8px;
@@ -274,4 +310,11 @@ $rating-gold: #e65100;   // Laranja/Ouro para destaque das notas
 
     &:hover { text-decoration: underline; }
   }
+}
+
+.empty-search {
+  padding: 2rem;
+  color: $text-support;
+  font-size: 0.9rem;
+  font-style: italic;
 }

@@ -11,31 +11,51 @@
   <main class="dashboard-main">
     
     <section class="suggestions-section">
-      <div class="section-header">
-        <h3>Os mais populares no momento 🎬</h3>
-        <p>Clique no "+" para adicionar um filme à lista de votação do grupo</p>
+      
+      <div class="section-header-search">
+        <div class="section-title">
+          <h3>{{ termoPesquisa() ? '🔎 Resultados para: "' + termoPesquisa() + '"' : 'Os mais populares no momento 🎬' }}</h3>
+          <p>{{ termoPesquisa() ? 'Exibindo correspondências encontradas no TMDB' : 'Clique no "+" para adicionar um filme à lista de votação do grupo' }}</p>
+        </div>
+
+        <div class="search-box">
+          <input 
+            type="text" 
+            placeholder="Pesquisar um filme..."
+            [(ngModel)]="termoPesquisa"
+            (input)="pesquisar()"
+            class="input-search"
+          />
+        </div>
       </div>
 
       <div class="carousel-wrapper">
         
-        <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -300)" title="Voltar">⟨</button>
+        <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -400)" title="Voltar">⟨</button>
         
         <div class="carousel-container" #carrossel>
           <div class="movies-carousel">
             @for (filme of SampleMovies(); track filme.id) {
               <div class="mini-movie-card">
                 <div class="mini-poster-wrapper">
-                  <img [src]="'https://image.tmdb.org/t/p/w300' + filme.poster_path" [alt]="filme.title" />
+                  <img 
+                    [src]="filme.poster_path ? 'https://image.tmdb.org/t/p/w300' + filme.poster_path : 'https://placehold.co/300x450/e2e0e8/6a677a?text=Sem+Cartaz'" 
+                    [alt]="filme.title" 
+                  />
                   <button class="btn-add-to-list" title="Adicionar à lista">＋</button>
-                  <span class="mini-rating">⭐ {{ filme.vote_average | number:'1.1-1' }}</span>
+                  <span class="mini-rating">⭐ {{ (filme.vote_average | number:'1.1-1') || '0.0' }}</span>
                 </div>
                 <h4>{{ filme.title }}</h4>
+              </div>
+            } @empty {
+              <div class="empty-search">
+                <p>Nenhum filme encontrado com o nome "{{ termoPesquisa() }}". Tente outra palavra-chave!</p>
               </div>
             }
           </div>
         </div>
 
-        <button class="arrow-btn right" (click)="moverCarrossel(carrossel, 300)" title="Avançar">⟩</button>
+        <button class="arrow-btn right" (click)="moverCarrossel(carrossel, 400)" title="Avançar">⟩</button>
 
       </div>
     </section>
@@ -48,7 +68,7 @@
         </div>
         
         <div class="action-buttons">
-          <button class="btn-primary btn-dice">🎲 Sortear Filme</button>
+          <button class="btn-primary">🎲 Sortear Filme</button>
         </div>
       </div>
 
@@ -72,7 +92,7 @@
           <button class="btn-remove">Remover</button>
         </div>
 
-        </div>
+      </div>
     </section>
 
   </main>
