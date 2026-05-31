@@ -26,14 +26,12 @@ export class Register {
         next: (response) => {
           console.log('Usuário cadastrado com sucesso!', response);
 
-          alert('Cadastro realizado com sucesso!');
           this.registerForm.reset();
 
           this.router.navigate(['/login']);
         },
         error: (error) => {
           console.error('Erro ao cadastrar usuário!', error);
-          alert('Erro ao cadastrar usuário. Verifique os dados.');
         }
       });
     }

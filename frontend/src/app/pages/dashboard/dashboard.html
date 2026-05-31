@@ -87,7 +87,11 @@
                 <span class="movie-year">({{ filme.release_date | date:'yyyy' }})</span>
                 <span class="movie-badge">⭐ {{ (filme.vote_average | number:'1.1-1') || '0.0' }}</span>
               </div>
-              <button class="btn-remove" (click)="removerFilmeDaLista(filme.id)">Remover</button>
+              
+              <div class="item-actions">
+                <button class="btn-choose-direct" (click)="escolherFilmeDiretamente(filme)">🍿 Escolher</button>
+                <button class="btn-remove" (click)="removerFilmeDaLista(filme.id)">Remover</button>
+              </div>
             </div>
           } @empty {
             <div class="empty-list-feedback">

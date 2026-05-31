@@ -1,5 +1,5 @@
-$bg-dark: #f8f9fa;       
-$bg-card: #ffffff;       
+$bg-dark: #f8f9fa;      
+$bg-card: #ffffff;      
 $text-main: #1c1b22;     
 $text-support: #6a677a;  
 $primary: #6200ee;       
@@ -15,7 +15,6 @@ $rating-gold: #e65100;
   flex-direction: column;
 }
 
-// Layout do Topo
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -24,7 +23,7 @@ $rating-gold: #e65100;
   background-color: $bg-card;
   border-bottom: 1px solid #e2e0e8;
 
-.brand h1 {
+  .brand h1 {
     font-size: 1.6rem;
     font-weight: 800;
     margin: 0;
@@ -87,7 +86,7 @@ $rating-gold: #e65100;
     border: 1px solid #e2e0e8;
     padding: 0.5rem 1rem;
     border-radius: 6px;
-    color: #6366f1;
+    color: $primary;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
@@ -95,7 +94,7 @@ $rating-gold: #e65100;
 
     &:hover {
       background-color: #f1f0f5;
-      border-color: #6366f1;
+      border-color: $primary;
     }
   }
 
@@ -114,7 +113,6 @@ $rating-gold: #e65100;
   }
 }
 
-// Caixa e Campo de Entrada de Busca
 .search-box {
   width: 100%;
   max-width: 350px;
@@ -139,7 +137,6 @@ $rating-gold: #e65100;
   }
 }
 
-// Mecanismo Oculto de Scroll com Setas Laterais Visíveis
 .carousel-wrapper {
   position: relative;
   width: 100%;
@@ -192,7 +189,6 @@ $rating-gold: #e65100;
   &.right { right: -20px; }
 }
 
-// Cartão e Elementos Internos de Mídia
 .mini-movie-card {
   width: 160px; 
   display: flex;
@@ -263,7 +259,6 @@ $rating-gold: #e65100;
   }
 }
 
-// Painel Operacional de Escolhas
 .session-section {
   background-color: $bg-card;
   border-radius: 8px;
@@ -335,15 +330,38 @@ $rating-gold: #e65100;
     margin-left: 0.5rem;
   }
 
-  .btn-remove {
-    background: none;
-    border: none;
-    color: #e11d48;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
+  .item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 
-    &:hover { text-decoration: underline; }
+    .btn-choose-direct {
+      background-color: transparent;
+      border: 1px solid $primary;
+      color: $primary;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: $primary;
+        color: white;
+      }
+    }
+
+    .btn-remove {
+      background: none;
+      border: none;
+      color: #e11d48;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+
+      &:hover { text-decoration: underline; }
+    }
   }
 }
 
@@ -364,7 +382,6 @@ $rating-gold: #e65100;
   font-size: 0.95rem;
 }
 
-// Painel de Destaque do Sorteio
 .winner-overlay {
   margin-top: 1.5rem;
   padding: 1.5rem;
@@ -449,38 +466,38 @@ $rating-gold: #e65100;
   }
 
   .winner-actions {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
 
-  .btn-confirm {
-    padding: 0.6rem 1.5rem;
-    font-size: 0.9rem;
-    background-color: #16a34a; 
-    border: 1px solid #16a34a;
-    color: white;
-
-    &:hover {
-      background-color: #15803d;
-      border-color: #15803d;
-    }
-  }
-
-  .btn-retry {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-    background-color: transparent;
-    border: 1px solid $primary;
-    color: $primary;
-    box-shadow: none;
-
-    &:hover {
-      background-color: $primary;
+    .btn-confirm {
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+      background-color: #16a34a; 
+      border: 1px solid #16a34a;
       color: white;
+
+      &:hover {
+        background-color: #15803d;
+        border-color: #15803d;
+      }
+    }
+
+    .btn-retry {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+      background-color: transparent;
+      border: 1px solid $primary;
+      color: $primary;
+      box-shadow: none;
+
+      &:hover {
+        background-color: $primary;
+        color: white;
+      }
     }
   }
-}
 }
 
 @keyframes fadeIn {

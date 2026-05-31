@@ -111,7 +111,6 @@ export class Dashboard implements OnInit, OnDestroy {
     const jaExiste = this.filmesSelecionados().some(item => item.id === filme.id);
 
     if (jaExiste) {
-      alert(`O filme "${filme.title}" já está na sua lista de votação!`);
       return;
     }
     this.filmesSelecionados.set([...this.filmesSelecionados(), filme]);
@@ -133,7 +132,6 @@ export class Dashboard implements OnInit, OnDestroy {
     const lista = this.filmesSelecionados();
 
     if (lista.length === 0) {
-      alert('Adicione pelo menos um filme à lista antes de sortear!');
       return;
     }
 
@@ -160,6 +158,30 @@ export class Dashboard implements OnInit, OnDestroy {
    */
   public fecharSorteio(): void {
     this.filmeSorteado.set(null);
+  }
+
+  /**
+   * Pula o sorteio e confirma o filme selecionado diretamente no banco
+   */
+  public escolherFilmeDiretamente(filme: any): void {
+    if (!filme) return;
+
+    // Define o filme como selecionado para reaproveitar a lógica visual se necessário
+    this.filmeSorteado.set(filme);
+
+    this.movieService.salvarSessaoSorteada(filme).subscribe({
+      next: (resposta) => {
+        // Limpa os estados do dashboard
+        this.filmeSorteado.set(null);
+        this.filmesSelecionados.set([]);
+
+        // Redireciona para o histórico expandido que você alinhou
+        this.router.navigate(['/historico']);
+      },
+      error: (erro) => {
+        console.error('Erro ao escolher filme manualmente:', erro);
+      }
+    });
   }
 
   public checarLimitesScroll(container: HTMLElement): void {
@@ -191,8 +213,6 @@ export class Dashboard implements OnInit, OnDestroy {
 
     this.movieService.salvarSessaoSorteada(filme).subscribe({
       next: (resposta) => {
-        alert('Sessão confirmada! Divirtam-se assistindo. 🍿');
-        
         // Reseta os estados de sorteio do dashboard
         this.filmeSorteado.set(null);
         this.filmesSelecionados.set([]);
@@ -202,7 +222,6 @@ export class Dashboard implements OnInit, OnDestroy {
       },
       error: (erro) => {
         console.error('Erro ao confirmar sessão:', erro);
-        alert('Não foi possível salvar a sessão. Tente novamente.');
       }
     });
   }
@@ -219,7 +238,6 @@ export class Dashboard implements OnInit, OnDestroy {
    */
   protected logout(): void {
     localStorage.removeItem('cinematch_token');
-    alert('Sessão encerrada com sucesso!');
     this.router.navigate(['/login']);
   }
 }

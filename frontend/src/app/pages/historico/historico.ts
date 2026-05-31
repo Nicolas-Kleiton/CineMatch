@@ -64,13 +64,11 @@ export class Historico implements OnInit {
       this.comentarioOriginal()
     ).subscribe({
       next: (resposta) => {
-        alert('Sessão encerrada e avaliada com sucesso! 🎉');
         this.fecharModal();
         this.carregarHistorico(); // Atualiza a tela reativamente
       },
       error: (erro) => {
         console.error('Erro ao salvar avaliação:', erro);
-        alert('Não foi possível salvar sua nota. Verifique os dados e tente novamente.');
       }
     });
   }

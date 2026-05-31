@@ -25,14 +25,12 @@ export class Login {
           console.log('Login realizado com sucesso!', response);
           localStorage.setItem('cinematch_token', response.access_token);
 
-          alert('Login realizado com sucesso!');
           this.loginForm.reset();
 
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Erro ao realizar login!', error);
-          alert('Erro ao realizar login. Verifique os dados.');
         },
       });
     }
