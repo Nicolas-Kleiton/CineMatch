@@ -1,0 +1,118 @@
+<div class="history-container">
+    <header class="history-header">
+        <div class="header-content">
+        <button class="btn-back" (click)="voltarAoDashboard()">
+            <span>←</span> Voltar para o Sorteio
+        </button>
+        <h1>Histórico de Sessões 🎬</h1>
+        </div>
+    </header>
+    
+    <main class="history-layout">
+    <section class="history-column">
+      <div class="column-title">
+        <h2>🍿 Próximas Sessões</h2>
+        <p>Filmes sorteados que vocês ainda precisam assistir</p>
+      </div>
+
+      <div class="sessions-list">
+        @for (sessao of sessoes(); track sessao.id) {
+          @if (sessao.status === 'pendente') {
+            <div class="session-card item-pending">
+              <img 
+                [src]="sessao.poster_path ? 'https://image.tmdb.org/t/p/w200' + sessao.poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
+                [alt]="sessao.title"
+                class="session-poster"
+              />
+              <div class="session-info">
+                <h3>{{ sessao.title }}</h3>
+                <p class="session-date">Sorteado em: {{ sessao.created_at | date:'dd/MM/yyyy às HH:mm' }}</p>
+                <button class="btn-action-evaluate" (click)="abrirModalAvaliacao(sessao)">⭐ Marcar como Assistido</button>
+              </div>
+            </div>
+          }
+        } @empty {
+          <div class="empty-column-feedback">
+            <p>Nenhum filme na fila. Vá até o dashboard e realize um sorteio! 🎲</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="history-column">
+      <div class="column-title">
+        <h2>✅ Já Assistidos</h2>
+        <p>Filmes que o grupo já assistiu e avaliou</p>
+      </div>
+
+      <div class="sessions-list">
+        @for (sessao of sessoes(); track sessao.id) {
+          @if (sessao.status === 'assistido') {
+            <div class="session-card item-watched">
+              <img 
+                [src]="sessao.poster_path ? 'https://image.tmdb.org/t/p/w200' + sessao.poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
+                [alt]="sessao.title"
+                class="session-poster"
+              />
+              <div class="session-info">
+                <h3>{{ sessao.title }}</h3>
+                <div class="rating-stars">
+                  <span class="stars-badge">⭐ {{ sessao.rating }}/5</span>
+                </div>
+                @if (sessao.comment) {
+                  <p class="user-comment">"{{ sessao.comment }}"</p>
+                }
+                <p class="session-date">Assistido em: {{ sessao.updated_at | date:'dd/MM/yyyy' }}</p>
+              </div>
+            </div>
+          }
+        } @empty {
+          <div class="empty-column-feedback">
+            <p>Nenhum filme avaliado ainda. Conclua uma sessão ao lado! 🎬</p>
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+
+  @if (exibindoModal() && sessaoSelecionada()) {
+    <div class="modal-backdrop">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>Avaliar Filme 🌟</h2>
+          <button class="btn-close" (click)="fecharModal()">✕</button>
+        </div>
+        
+        <div class="modal-body">
+          <p>O que você e seus amigos acharam de <strong>{{ sessaoSelecionada().title }}</strong>?</p>
+          
+          <div class="form-group">
+            <label>Sua nota (de 1 a 5 estrelas):</label>
+            <select [(ngModel)]="notaSelecionada" class="select-rating">
+              <option [value]="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+              <option [value]="4">⭐⭐⭐⭐ (Muito Bom)</option>
+              <option [value]="3">⭐⭐⭐ (Bom / Ok)</option>
+              <option [value]="2">⭐⭐ (Ruim)</option>
+              <option [value]="1">⭐ (Péssimo)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Comentário (Opcional):</label>
+            <textarea 
+              [(ngModel)]="comentarioOriginal" 
+              placeholder="Deixe suas impressões sobre o filme..."
+              rows="4"
+              class="textarea-comment"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-cancel" (click)="fecharModal()">Cancelar</button>
+          <button class="btn-submit-evaluation" (click)="enviarAvaliacao()">Salvar Avaliação</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

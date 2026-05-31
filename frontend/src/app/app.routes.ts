@@ -7,9 +7,14 @@ import { authGuard } from './guards/auth-guard';
 export const routes: Routes = [
     { path: 'register', component: Register},
     { path: 'login', component: Login },
-    { 
-        path: 'dashboard', 
-        component: Dashboard,
-        canActivate: [authGuard]
-    }
+    {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard)
+    },
+    {
+    path: 'historico',
+    loadComponent: () => import('./pages/historico/historico').then(m => m.Historico)
+    },
+
+    { path: '**', redirectTo: 'dashboard' }
 ];

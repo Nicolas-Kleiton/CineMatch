@@ -117,7 +117,7 @@ export class Dashboard implements OnInit, OnDestroy {
     this.filmesSelecionados.set([...this.filmesSelecionados(), filme]);
   }
 
-    /**
+  /**
    * Remove um filme da lista de filmes selecionados
    */
 
@@ -179,6 +179,39 @@ export class Dashboard implements OnInit, OnDestroy {
     });
 
     setTimeout(() => this.checarLimitesScroll(elemento), 350);
+  }
+
+  /**
+   * Envia o filme vencedor para o banco do Laravel e avança para o histórico
+   */
+  public confirmarFilmeSorteado(): void {
+    const filme = this.filmeSorteado();
+    
+    if (!filme) return;
+
+    this.movieService.salvarSessaoSorteada(filme).subscribe({
+      next: (resposta) => {
+        alert('Sessão confirmada! Divirtam-se assistindo. 🍿');
+        
+        // Reseta os estados de sorteio do dashboard
+        this.filmeSorteado.set(null);
+        this.filmesSelecionados.set([]);
+
+        // Redireciona o usuário para a tela de histórico
+        this.router.navigate(['/historico']);
+      },
+      error: (erro) => {
+        console.error('Erro ao confirmar sessão:', erro);
+        alert('Não foi possível salvar a sessão. Tente novamente.');
+      }
+    });
+  }
+  
+  /**
+   * Navega diretamente para a página de histórico de sessões
+   */
+  public irParaHistorico(): void {
+    this.router.navigate(['/historico']);
   }
 
   /**
