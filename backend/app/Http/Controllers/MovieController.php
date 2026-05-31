@@ -92,4 +92,33 @@ class MovieController extends Controller
 
         return response()->json($history);
     }
+
+    /**
+     * Atualiza a sessão de filme com a nota e o comentário do grupo, marcando como assistida
+    */
+    public function evaluate(Request $request, $id)
+    {
+        // Valida as notas aceitando apenas o intervalo de 1 a 5 estrelas
+        $validated = $request->validate([
+            'rating'  => 'required|integer|between:1,5',
+            'comment' => 'nullable|string|max:1000'
+        ]);
+
+        // Busca a sessão garantindo que ela pertença ao usuário logado (segurança extra)
+        $session = MovieSession::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Atualiza os dados consolidando o encerramento da sessão
+        $session->update([
+            'status'  => 'assistido',
+            'rating'  => $validated['rating'],
+            'comment' => $validated['comment']
+        ]);
+
+        return response()->json([
+            'message' => 'Sessão avaliada com sucesso!',
+            'session' => $session
+        ]);
+    }
 }

@@ -17,5 +17,5 @@ Route::middleware('auth:sanctum')->group(function () {
     // Gerenciamento do Histórico de Sessões
     Route::post('/movie-sessions', [MovieController::class, 'store']);
     Route::get('/movie-sessions/history', [MovieController::class, 'history']);
-    
+    Route::put('/movie-sessions/{id}/evaluate', [MovieController::class, 'evaluate']);
 });
