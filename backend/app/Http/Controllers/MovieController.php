@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\MovieSession;
 
 class MovieController extends Controller
 {
@@ -38,9 +41,9 @@ class MovieController extends Controller
 
         $response = Http::withToken($token)
             ->get("{$baseUrl}/search/movie", [
-                'language' => 'pt-BR',
-                'query' => $query,
-                'page' => 1,
+                'language'      => 'pt-BR',
+                'query'         => $query,
+                'page'          => 1,
                 'include_adult' => false,
             ]);
 
@@ -49,5 +52,44 @@ class MovieController extends Controller
             }
 
             return response()->json(['error'=> 'Não foi possível buscar os filmes'], 500);
+    }
+
+    /**
+     * Salva uma nova sessão de filme sorteada e confirmada
+    */
+    public function store(Request $request)
+    {
+        // Valida os dados mínimos que o Angular precisa enviar do filme vencedor
+        $validated = $request->validate([
+            'tmdb_id' => 'required|integer',
+            'title' => 'required|string|max:255',
+            'poster_path' => 'nullable|string|max:255'
+        ]);
+
+        $session = MovieSession::create([
+        'user_id'     => Auth::id(), // Pega o ID do usuário logado no momento
+        'tmdb_id'     => $validated['tmdb_id'],
+        'title'       => $validated['title'],
+        'poster_path' => $validated['poster_path'],
+        'status'      => 'pendente'  // Nasce como pendente até ser assistido
+    ]);
+
+    return response()->json([
+        'message' => 'Sessão de filme confirmada com sucesso!',
+        'session' => $session
+    ],201);
+
+    }
+
+    /**
+     * Retorna o histórico de sessões do usuário logado
+    */
+    public function history()
+    {
+        $history = MovieSession::where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        return response()->json($history);
     }
 }
