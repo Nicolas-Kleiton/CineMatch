@@ -123,9 +123,16 @@
                     <button class="btn-primary btn-confirm" (click)="confirmarFilmeSorteado()">
                       ✅ Confirmar e Assistir
                     </button>
-                    <button class="btn-primary btn-retry" (click)="fecharSorteio()">
-                      🔄 Sortear Novamente
-                    </button>
+                    
+                    @if (foiEscolhaManual()) {
+                      <button class="btn-primary btn-retry" (click)="fecharSorteio()">
+                        📂 Escolher Outro
+                      </button>
+                    } @else {
+                      <button class="btn-primary btn-retry" (click)="fecharSorteio()">
+                        🔄 Sortear Novamente
+                      </button>
+                    }
                   </div>
                 }
               </div>

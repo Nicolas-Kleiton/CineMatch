@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, signal, OnDestroy, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie';
 import { CommonModule } from '@angular/common';
@@ -23,7 +23,18 @@ export class Dashboard implements OnInit, OnDestroy {
   public filmeSorteado = signal<any | null>(null);
   public estaSorteando = signal<boolean>(false);
   public mostrarSetaEsquerda = signal<boolean>(false);
-  public mostrarSetaDireita = signal<boolean>(true);
+  
+  // Controla o estado de origem para alternar os textos dos botões do painel de resultado
+  public foiEscolhaManual = signal<boolean>(false);
+
+  // Trava reativa para impedir que a seta direita apareça quando o carrossel estiver vazio
+  private podeDarScrollDireita = signal<boolean>(true);
+  public mostrarSetaDireita = computed(() => {
+    if (this.SampleMovies().length === 0) {
+      return false;
+    }
+    return this.podeDarScrollDireita();
+  });
 
   private pesquisadorSubject = new Subject<string>();
   private pesquisaSubscription!: Subscription;
@@ -33,9 +44,6 @@ export class Dashboard implements OnInit, OnDestroy {
     this.configurarPesquisaDebounce();
   }
 
-  /**
-   * Configura o fluxo de debounce para evitar requisições repetidas ao digitar
-   */
   private configurarPesquisaDebounce(): void {
     this.pesquisaSubscription = this.pesquisadorSubject.pipe(
       debounceTime(300),
@@ -45,15 +53,12 @@ export class Dashboard implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Busca os filmes populares no backend
-   */
   public obterCatalogoFilmes(): void {
     this.movieService.getPopularMovies().subscribe({
       next: (filmes) => {
         this.SampleMovies.set(filmes);
         this.mostrarSetaEsquerda.set(false);
-        this.mostrarSetaDireita.set(true);
+        this.podeDarScrollDireita.set(filmes.length > 0);
       },
       error: (erro) => {
         console.error('Erro ao buscar filmes populares:', erro);
@@ -61,17 +66,10 @@ export class Dashboard implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Método acionado pelo evento (input) do HTML a cada tecla
-   */
   public pesquisar(): void {
-    // Alimenta o canal do RxJS com o valor atual do input limpo de espaços
     this.pesquisadorSubject.next(this.termoPesquisa().trim());
   }
 
-  /**
-   * Executa a requisição para a rota de busca no Laravel
-   */
   private executarBuscaNoBackend(termo: string): void {
     if (termo === '') {
       this.obterCatalogoFilmes();
@@ -94,18 +92,11 @@ export class Dashboard implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Limpa a inscrição para evitar vazamentos de memória ao trocar de página
-   */
   ngOnDestroy(): void {
     if (this.pesquisaSubscription) {
       this.pesquisaSubscription.unsubscribe();
     }
   }
-
-  /**
-   * Adiciona um filme à lista de filmes selecionados
-   */
 
   public adicionarFilmeALista(filme: any): void {
     const jaExiste = this.filmesSelecionados().some(item => item.id === filme.id);
@@ -116,18 +107,11 @@ export class Dashboard implements OnInit, OnDestroy {
     this.filmesSelecionados.set([...this.filmesSelecionados(), filme]);
   }
 
-  /**
-   * Remove um filme da lista de filmes selecionados
-   */
-
   public removerFilmeDaLista(filmeId: number): void {
     const listaFiltrada = this.filmesSelecionados().filter(item => item.id !== filmeId);
     this.filmesSelecionados.set(listaFiltrada);
   }
 
-  /**
-   * Realiza o sorteio aleatório com efeito de roleta
-   */
   public sortearFilme(): void {
     const lista = this.filmesSelecionados();
 
@@ -135,13 +119,13 @@ export class Dashboard implements OnInit, OnDestroy {
       return;
     }
 
+    this.foiEscolhaManual.set(false); // Reseta a flag indicando fluxo de sorteio por roleta
     this.estaSorteando.set(true);
     this.filmeSorteado.set(null);
 
     let contador = 0;
     const totalGiros = 15;
 
-    // Cria um intervalo que roda a cada 100ms mudando o filme focado
     const intervalo = setInterval(() => {
       const indiceAleatorio = Math.floor(Math.random() * lista.length);
       this.filmeSorteado.set(lista[indiceAleatorio]);
@@ -154,46 +138,27 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   /**
-   * Limpa o filme sorteado da tela para fechar o destaque
-   */
-  public fecharSorteio(): void {
-    this.filmeSorteado.set(null);
-  }
-
-  /**
    * Pula o sorteio e confirma o filme selecionado diretamente no banco
    */
   public escolherFilmeDiretamente(filme: any): void {
     if (!filme) return;
 
-    // Define o filme como selecionado para reaproveitar a lógica visual se necessário
-    this.filmeSorteado.set(filme);
+    this.foiEscolhaManual.set(true); // Marca que o fluxo atual veio de uma escolha manual
+    this.filmeSorteado.set(filme);   // Joga o filme escolhido direto para exibição do painel
+  }
 
-    this.movieService.salvarSessaoSorteada(filme).subscribe({
-      next: (resposta) => {
-        // Limpa os estados do dashboard
-        this.filmeSorteado.set(null);
-        this.filmesSelecionados.set([]);
-
-        // Redireciona para o histórico expandido que você alinhou
-        this.router.navigate(['/historico']);
-      },
-      error: (erro) => {
-        console.error('Erro ao escolher filme manualmente:', erro);
-      }
-    });
+  public fecharSorteio(): void {
+    this.filmeSorteado.set(null);
+    this.foiEscolhaManual.set(false);
   }
 
   public checarLimitesScroll(container: HTMLElement): void {
     this.mostrarSetaEsquerda.set(container.scrollLeft > 5);
     const temConteudoParaRolar = container.scrollWidth > container.clientWidth;
     const chegouAoFim = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
-    this.mostrarSetaDireita.set(temConteudoParaRolar && !chegouAoFim);
+    this.podeDarScrollDireita.set(temConteudoParaRolar && !chegouAoFim);
   }
 
-  /**
-   * Controla o deslocamento horizontal do carrossel
-   */
   public moverCarrossel(elemento: HTMLElement, distancia: number): void {
     elemento.scrollBy({
       left: distancia,
@@ -203,39 +168,28 @@ export class Dashboard implements OnInit, OnDestroy {
     setTimeout(() => this.checarLimitesScroll(elemento), 350);
   }
 
-  /**
-   * Envia o filme vencedor para o banco do Laravel e avança para o histórico
-   */
   public confirmarFilmeSorteado(): void {
     const filme = this.filmeSorteado();
     
     if (!filme) return;
 
     this.movieService.salvarSessaoSorteada(filme).subscribe({
-      next: (resposta) => {
-        // Reseta os estados de sorteio do dashboard
+      next: () => {
         this.filmeSorteado.set(null);
         this.filmesSelecionados.set([]);
-
-        // Redireciona o usuário para a tela de histórico
+        this.foiEscolhaManual.set(false);
         this.router.navigate(['/historico']);
       },
       error: (erro) => {
-        console.error('Erro ao confirmar sessão:', erro);
+        console.error('Erro ao confirmar sessão no banco:', erro);
       }
     });
   }
   
-  /**
-   * Navega diretamente para a página de histórico de sessões
-   */
   public irParaHistorico(): void {
     this.router.navigate(['/historico']);
   }
 
-  /**
-   * Destrói a sessão local e retorna para a tela de login
-   */
   protected logout(): void {
     localStorage.removeItem('cinematch_token');
     this.router.navigate(['/login']);
