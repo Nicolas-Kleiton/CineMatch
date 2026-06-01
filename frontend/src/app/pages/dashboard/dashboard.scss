@@ -1,18 +1,18 @@
-$bg-dark: #f8f9fa;      
-$bg-card: #ffffff;      
-$text-main: #1c1b22;     
-$text-support: #6a677a;  
-$primary: #6200ee;       
-$primary-hover: #7f39fb; 
-$rating-gold: #e65100;   
+$primary: #6366f1;
+$primary-hover: #4f46e5;
+$text-main: #ffffff;
+$text-support: #9ca3af;
+$rating-gold: #fbbf24;
+
+$card-bg: rgba(255, 255, 255, 0.03);
+$card-border: rgba(255, 255, 255, 0.08);
+$card-glass: blur(16px);
 
 .dashboard-container {
   min-height: 100vh;
-  background-color: $bg-dark;
-  color: $text-main;
-  font-family: 'Inter', sans-serif;
   display: flex;
   flex-direction: column;
+  color: $text-main;
 }
 
 .dashboard-header {
@@ -20,32 +20,34 @@ $rating-gold: #e65100;
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem 2rem;
-  background-color: $bg-card;
-  border-bottom: 1px solid #e2e0e8;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: $card-glass;
+  -webkit-backdrop-filter: $card-glass;
+  border-bottom: 1px solid $card-border;
 
   .brand h1 {
     font-size: 1.6rem;
     font-weight: 800;
     margin: 0;
-    background: linear-gradient(45deg, $primary, $primary-hover);
-    background-clip: text;
-    color: transparent;
+    color: #a8a5ff;
+    text-shadow: 0 2px 10px rgba(168, 165, 255, 0.4);
     display: inline-block;
   }
 
   .btn-logout {
     background-color: transparent;
-    border: 1px solid #d1ceda;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: $text-support;
     padding: 0.5rem 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
       border-color: $primary;
-      color: $primary;
+      color: white;
+      background: rgba(99, 102, 241, 0.1);
     }
   }
 }
@@ -82,33 +84,21 @@ $rating-gold: #e65100;
   gap: 1rem;
 
   .btn-history {
-    background: transparent;
-    border: 1px solid #e2e0e8;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    color: $primary;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    color: #a8a5ff;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-      background-color: #f1f0f5;
+      background-color: $primary;
+      color: white;
       border-color: $primary;
-    }
-  }
-
-  .btn-logout {
-    background: transparent;
-    border: none;
-    padding: 0.5rem 1rem;
-    color: #ef4444;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    
-    &:hover {
-      text-decoration: underline;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
   }
 }
@@ -120,20 +110,22 @@ $rating-gold: #e65100;
 
 .input-search {
   width: 100%;
-  padding: 0.6rem 1rem;
-  background-color: #ffffff;
-  border: 1px solid #d1ceda;
-  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid $card-border;
+  border-radius: 12px;
   color: $text-main;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   outline: none;
   transition: all 0.2s ease;
+  font-family: inherit;
 
   &::placeholder { color: $text-support; }
 
   &:focus {
     border-color: $primary;
-    box-shadow: 0 0 8px rgba($primary, 0.2);
+    background-color: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
   }
 }
 
@@ -162,11 +154,12 @@ $rating-gold: #e65100;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.95);
-  border: 1px solid #e2e0e8;
-  color: $primary;
-  width: 40px;
-  height: 40px;
+  background-color: rgba(30, 27, 46, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   font-size: 1.4rem;
   font-weight: bold;
@@ -174,19 +167,18 @@ $rating-gold: #e65100;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
   z-index: 10;
   transition: all 0.2s ease;
 
   &:hover {
     background-color: $primary;
-    color: white;
     border-color: $primary;
     transform: translateY(-50%) scale(1.1);
   }
 
-  &.left { left: -20px; }
-  &.right { right: -20px; }
+  &.left { left: -22px; }
+  &.right { right: -22px; }
 }
 
 .mini-movie-card {
@@ -210,157 +202,180 @@ $rating-gold: #e65100;
   position: relative;
   width: 100%;
   height: 240px; 
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  border: 1px solid $card-border;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.2s;
+    transition: transform 0.3s ease;
   }
 
-  &:hover img { transform: scale(1.05); }
+  &:hover img { transform: scale(1.08); }
 
   .btn-add-to-list {
     position: absolute;
     bottom: 8px;
     right: 8px;
-    background-color: $primary;
+    background-color: rgba(99, 102, 241, 0.9);
+    backdrop-filter: blur(4px);
     color: white;
     border: none;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba($primary, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    transition: all 0.2s;
 
-    &:hover { background-color: $primary-hover; }
+    &:hover { 
+      background-color: $primary-hover; 
+      transform: scale(1.1);
+    }
   }
 
   .mini-rating {
     position: absolute;
-    top: 6px;
-    left: 6px;
-    background-color: rgba(255, 255, 255, 0.9);
+    top: 8px;
+    left: 8px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
     color: $rating-gold;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 
 .session-section {
-  background-color: $bg-card;
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid #e2e0e8;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  background: $card-bg;
+  backdrop-filter: $card-glass;
+  -webkit-backdrop-filter: $card-glass;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid $card-border;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .session-actions-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #f4f4f6;
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 
-  h2 { font-size: 1.3rem; margin: 0 0 0.2rem 0; font-weight: 700; }
-  p { color: $text-support; font-size: 0.85rem; margin: 0; }
+  h2 { font-size: 1.4rem; margin: 0 0 0.2rem 0; font-weight: 700; }
+  p { color: $text-support; font-size: 0.9rem; margin: 0; }
 }
 
 .btn-primary {
   background-color: $primary;
   color: white;
   border: none;
-  padding: 0.7rem 1.4rem;
-  border-radius: 6px;
+  padding: 0.8rem 1.6rem;
+  border-radius: 12px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba($primary, 0.3);
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
 
   &:hover {
     background-color: $primary-hover;
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($primary, 0.4);
   }
 }
 
 .selected-movies-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .selected-movie-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.9rem 1.2rem;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  border: 1px solid #e2e0e8;
+  padding: 1rem 1.5rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid $card-border;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
 
   .movie-details {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
-  .movie-name { font-weight: 600; color: $text-main; }
+  .movie-name { font-weight: 600; color: $text-main; font-size: 1.05rem; }
   .movie-year { color: $text-support; font-size: 0.9rem; }
   
   .movie-badge {
-    background-color: #fef3c7;
-    color: #b45309;
+    background-color: rgba($rating-gold, 0.15);
+    color: $rating-gold;
+    border: 1px solid rgba($rating-gold, 0.3);
     font-size: 0.75rem;
     font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
     margin-left: 0.5rem;
   }
 
   .item-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
 
     .btn-choose-direct {
-      background-color: transparent;
-      border: 1px solid $primary;
-      color: $primary;
-      padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
+      background-color: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a8a5ff;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
 
       &:hover {
         background-color: $primary;
         color: white;
+        border-color: $primary;
       }
     }
 
     .btn-remove {
       background: none;
       border: none;
-      color: #e11d48;
-      font-size: 0.85rem;
+      color: #f87171;
+      font-size: 0.9rem;
       font-weight: 500;
       cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 6px;
 
-      &:hover { text-decoration: underline; }
+      &:hover { 
+        background: rgba(248, 113, 113, 0.1);
+      }
     }
   }
 }
@@ -370,35 +385,38 @@ $rating-gold: #e65100;
   color: $text-support;
   font-size: 0.9rem;
   font-style: italic;
+  text-align: center;
 }
 
 .empty-list-feedback {
   text-align: center;
-  padding: 3rem 1.5rem;
+  padding: 4rem 2rem;
   color: $text-support;
-  background-color: #f8f9fa;
-  border: 2px dashed #d1ceda;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  background-color: rgba(0, 0, 0, 0.15);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 1rem;
 }
 
 .winner-overlay {
-  margin-top: 1.5rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, rgba($primary, 0.05), rgba($primary-hover, 0.1));
-  border: 2px solid $primary;
-  border-radius: 8px;
-  animation: fadeIn 0.3s ease-out;
+  margin-top: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(232, 28, 255, 0.05));
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .winner-card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 
   &.spinning {
     opacity: 0.7;
-    filter: blur(0.5px);
+    filter: blur(1px);
+    transition: all 0.1s ease;
   }
 }
 
@@ -408,35 +426,49 @@ $rating-gold: #e65100;
   align-items: center;
   
   span {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 800;
     letter-spacing: 1px;
-    color: $primary;
+    color: #a8a5ff;
+    text-transform: uppercase;
   }
 }
 
 .btn-close-winner {
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.1rem;
   color: $text-support;
   cursor: pointer;
-  &:hover { color: #e11d48; }
+  transition: all 0.2s;
+
+  &:hover { 
+    color: white; 
+    background: rgba(239, 68, 68, 0.8);
+    border-color: rgba(239, 68, 68, 1);
+  }
 }
 
 .winner-content {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .winner-poster {
-  width: 90px;
-  height: 135px;
+  width: 120px;
+  height: 180px;
   object-fit: cover;
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .winner-info {
@@ -444,23 +476,23 @@ $rating-gold: #e65100;
   min-width: 250px;
 
   h3 {
-    font-size: 1.4rem;
-    margin: 0 0 0.4rem 0;
-    font-weight: 700;
+    font-size: 1.8rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 800;
     color: $text-main;
   }
 
   .winner-meta {
-    font-size: 0.85rem;
-    color: $text-support;
-    margin: 0 0 0.75rem 0;
+    font-size: 0.95rem;
+    color: #a8a5ff;
+    margin: 0 0 1rem 0;
     font-weight: 500;
   }
 
   .winner-overview {
-    font-size: 0.9rem;
-    color: #4a4754;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    color: #d1d5db;
+    line-height: 1.6;
     margin: 0;
     text-align: justify;
   }
@@ -472,35 +504,43 @@ $rating-gold: #e65100;
     flex-wrap: wrap;
 
     .btn-confirm {
-      padding: 0.6rem 1.5rem;
-      font-size: 0.9rem;
-      background-color: #16a34a; 
-      border: 1px solid #16a34a;
+      padding: 0.75rem 1.75rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
       color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+      cursor: pointer;
+      transition: all 0.2s;
 
       &:hover {
-        background-color: #15803d;
-        border-color: #15803d;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
       }
     }
 
     .btn-retry {
-      padding: 0.6rem 1.2rem;
-      font-size: 0.9rem;
-      background-color: transparent;
-      border: 1px solid $primary;
-      color: $primary;
-      box-shadow: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
 
       &:hover {
-        background-color: $primary;
-        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: white;
       }
     }
   }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }

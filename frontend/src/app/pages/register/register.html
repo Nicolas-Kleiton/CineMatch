@@ -1,38 +1,56 @@
-<div class="register-container">
-  <h2>Criar Conta - CineMatch</h2>
-
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    
-    <div class="form-group">
-      <input 
-        id="name" 
-        type="text" 
-        formControlName="name" 
-        placeholder="Nome"
-      />
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="logo-icon">✨</div>
+      <h2>Junte-se ao CineMatch</h2>
+      <p>Crie sua conta para começar!</p>
     </div>
 
-    <div class="form-group">
-      <input 
-        id="email" 
-        type="email" 
-        formControlName="email" 
-        placeholder="E-mail"
-      />
-    </div>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      
+      <div class="form-group">
+        <label for="name">Usuário</label>
+        <div class="input-wrapper">
+          <input 
+            id="name" 
+            type="text" 
+            formControlName="name" 
+            placeholder="Usuário"
+          />
+        </div>
+      </div>
 
-    <div class="form-group">
-      <input 
-        id="password" 
-        type="password" 
-        formControlName="password" 
-        placeholder="Senha"
-      />
-    </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <div class="input-wrapper">
+          <input 
+            id="email" 
+            type="email" 
+            formControlName="email" 
+            placeholder="seu@email.com"
+          />
+        </div>
+      </div>
 
-    <button type="submit" [disabled]="registerForm.invalid">
-      Registar
-    </button>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <input 
+            id="password" 
+            type="password" 
+            formControlName="password" 
+            placeholder="Mínimo 6 caracteres"
+          />
+        </div>
+      </div>
 
-  </form>
+      <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">
+        <span>Criar Conta</span>
+      </button>
+
+      <div class="auth-footer">
+        <p>Já possui conta? <a href="/login">Entre aqui</a></p>
+      </div>
+    </form>
+  </div>
 </div>

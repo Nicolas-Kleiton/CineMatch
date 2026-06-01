@@ -1,22 +1,24 @@
 $purple-main: #6366f1;
 $purple-hover: #4f46e5;
-$bg-light: #f8f7fa;
-$text-dark: #2d2a38;
-$text-muted: #7c7789;
-$border-color: #e2e0e8;
+$text-light: #ffffff;
+$text-muted: #9ca3af;
+$border-glass: rgba(255, 255, 255, 0.08);
+$bg-glass: rgba(255, 255, 255, 0.03);
 
 .history-container {
   min-height: 100vh;
-  background-color: $bg-light;
-  color: $text-dark;
-  font-family: system-ui, -apple-system, sans-serif;
+  color: $text-light;
+  display: flex;
+  flex-direction: column;
 }
 
 .history-header {
-  background: white;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 1.5rem 2.5rem;
-  border-bottom: 1px solid $border-color;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid $border-glass;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 
   .header-content {
     max-width: 1600px;
@@ -38,6 +40,7 @@ $border-color: #e2e0e8;
       gap: 0.25rem;
       width: fit-content;
       transition: color 0.2s ease;
+      font-family: inherit;
 
       span {
         font-size: 1rem;
@@ -45,16 +48,16 @@ $border-color: #e2e0e8;
       }
 
       &:hover {
-        color: $purple-main;
-        span { transform: translateX(-2px); }
+        color: white;
+        span { transform: translateX(-4px); }
       }
     }
 
     h1 {
       font-size: 1.85rem;
       margin: 0;
-      font-weight: 700;
-      color: $text-dark;
+      font-weight: 800;
+      color: $text-light;
       letter-spacing: -0.02em;
     }
   }
@@ -70,21 +73,23 @@ $border-color: #e2e0e8;
 }
 
 .history-column {
-  background: white;
+  background: $bg-glass;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
-  border: 1px solid $border-color;
+  border: 1px solid $border-glass;
   padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   height: fit-content;
 
   .column-title {
     margin-bottom: 2rem;
-    border-bottom: 2px solid #f1f0f5;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 1rem;
 
-    h2 { font-size: 1.35rem; margin: 0; font-weight: 700; }
+    h2 { font-size: 1.35rem; margin: 0; font-weight: 800; }
     p { font-size: 0.9rem; color: $text-muted; margin: 0.35rem 0 0 0; }
   }
 }
@@ -98,16 +103,18 @@ $border-color: #e2e0e8;
 .session-card {
   display: flex;
   gap: 1.5rem;
-  border: 1px solid $border-color;
+  border: 1px solid $border-glass;
   border-radius: 12px;
   padding: 1rem;
-  background: #ffffff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
   align-items: center;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.05);
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   }
 
   .session-poster {
@@ -115,7 +122,7 @@ $border-color: #e2e0e8;
     height: 120px;
     object-fit: cover;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
 
   .session-info {
@@ -129,11 +136,11 @@ $border-color: #e2e0e8;
       margin: 0;
       font-weight: 700;
       line-height: 1.3;
-      color: $text-dark;
+      color: $text-light;
     }
 
     .session-date {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: $text-muted;
       margin: 0;
     }
@@ -141,33 +148,37 @@ $border-color: #e2e0e8;
     .action-buttons-group {
       display: flex;
       gap: 0.75rem;
-      margin-top: 0.25rem;
+      margin-top: 0.5rem;
     }
   }
 }
 
-.item-pending { border-left: 5px solid #f59e0b; }
-.item-watched { border-left: 5px solid #10b981; }
+.item-pending { border-left: 4px solid #fbbf24; }
+.item-watched { border-left: 4px solid #10b981; }
 
 .btn-action-evaluate {
-  background-color: $purple-main;
-  color: white;
-  border: none;
-  padding: 0.55rem 1.2rem;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a8a5ff;
+  padding: 0.5rem 1.2rem;
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 
-  &:hover { background-color: $purple-hover; }
+  &:hover { 
+    background-color: $purple-main;
+    border-color: $purple-main;
+    color: white;
+  }
 }
 
 .btn-action-remove {
   background-color: transparent;
-  border: 1px solid #d1ceda;
-  color: #ef4444;
-  padding: 0.55rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f87171;
+  padding: 0.5rem 1.2rem;
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: 8px;
@@ -175,8 +186,8 @@ $border-color: #e2e0e8;
   transition: all 0.2s;
 
   &:hover {
-    background-color: #fef2f2;
-    border-color: #ef4444;
+    background-color: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.4);
   }
 }
 
@@ -184,7 +195,7 @@ $border-color: #e2e0e8;
   background: transparent;
   border: none;
   padding: 0;
-  color: $purple-main;
+  color: #a8a5ff;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -192,12 +203,13 @@ $border-color: #e2e0e8;
   width: fit-content;
   margin-top: 0.25rem;
 
-  &:hover { text-decoration: underline; }
+  &:hover { text-decoration: underline; color: white; }
 }
 
 .stars-badge {
-  background-color: #ecfdf5;
-  color: #065f46;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
   padding: 0.25rem 0.6rem;
   font-size: 0.85rem;
   font-weight: 700;
@@ -208,12 +220,12 @@ $border-color: #e2e0e8;
 .user-comment {
   font-size: 0.9rem;
   font-style: italic;
-  color: #4b5563;
-  background: #f9fafb;
-  padding: 0.75rem;
-  border-radius: 6px;
-  border-left: 3px solid $border-color;
-  margin: 0.25rem 0;
+  color: #d1d5db;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border-left: 3px solid rgba(255, 255, 255, 0.2);
+  margin: 0.5rem 0;
 }
 
 .empty-column-feedback {
@@ -221,9 +233,9 @@ $border-color: #e2e0e8;
   padding: 3rem 1.5rem;
   color: $text-muted;
   font-size: 0.95rem;
-  border: 2px dashed $border-color;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
   border-radius: 12px;
-  background: #fafafd;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .modal-backdrop {
@@ -232,8 +244,8 @@ $border-color: #e2e0e8;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(45, 42, 56, 0.4);
-  backdrop-filter: blur(4px);
+  background: rgba(11, 9, 20, 0.7);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -241,22 +253,29 @@ $border-color: #e2e0e8;
 }
 
 .modal-box {
-  background: white;
+  background: rgba(26, 21, 46, 0.95);
+  border: 1px solid $border-glass;
   width: 90%;
   max-width: 480px;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .modal-header {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  h2 { font-size: 1.25rem; margin: 0; font-weight: 700; }
+  h2 { font-size: 1.25rem; margin: 0; font-weight: 700; color: white; }
   .btn-close {
     background: transparent;
     border: none;
@@ -264,7 +283,7 @@ $border-color: #e2e0e8;
     cursor: pointer;
     color: $text-muted;
     transition: color 0.2s;
-    &:hover { color: $text-dark; }
+    &:hover { color: white; }
   }
 }
 
@@ -273,41 +292,50 @@ $border-color: #e2e0e8;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  p { font-size: 0.95rem; margin: 0; color: #4b5563; line-height: 1.4; }
+  p { font-size: 0.95rem; margin: 0; color: #d1d5db; line-height: 1.4; }
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  label { font-size: 0.9rem; font-weight: 600; color: $text-dark; }
+  label { font-size: 0.9rem; font-weight: 600; color: white; }
 
   .select-rating, .textarea-comment {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid $border-color;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
     border-radius: 8px;
     font-size: 0.95rem;
     outline: none;
     box-sizing: border-box;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    font-family: inherit;
 
     &:focus {
       border-color: $purple-main;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    option {
+      background: #1a152e;
+      color: white;
     }
   }
 
-  .textarea-comment { resize: vertical; font-family: inherit; }
+  .textarea-comment { resize: vertical; }
 }
 
 .modal-footer {
   padding: 1.25rem 1.5rem;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  background: #fbfbfe;
+  background: rgba(0, 0, 0, 0.2);
 
   button {
     padding: 0.6rem 1.2rem;
@@ -316,13 +344,14 @@ $border-color: #e2e0e8;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
+    font-family: inherit;
   }
 
   .btn-cancel {
-    background: white;
-    border: 1px solid $border-color;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: $text-muted;
-    &:hover { background: #f4f3f7; color: $text-dark; }
+    &:hover { background: rgba(255, 255, 255, 0.05); color: white; }
   }
 
   .btn-submit-evaluation {
