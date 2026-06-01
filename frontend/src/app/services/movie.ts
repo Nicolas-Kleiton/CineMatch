@@ -58,4 +58,9 @@ export class MovieService {
     const dadosForm = { rating, comment };
     return this.http.put(`${this.sessionUrl}/${id}/evaluate`, dadosForm, { headers });
   }
+
+  public removerSessaoPendente(id: number): Observable<any> {
+    const headers = this.obterHeadersAutenticados();
+    return this.http.delete(`${this.sessionUrl}/${id}`, { headers });
+  }
 }

@@ -45,8 +45,17 @@ export class Historico implements OnInit {
    */
   public abrirModalAvaliacao(sessao: any): void {
     this.sessaoSelecionada.set(sessao);
-    this.notaSelecionada.set(5); // Reseta para nota máxima padrão
-    this.comentarioOriginal.set(''); // Limpa o texto
+    
+    // Se o status for 'assistido', carrega os dados já salvos para edição
+    if (sessao.status === 'assistido') {
+      this.notaSelecionada.set(sessao.rating);
+      this.comentarioOriginal.set(sessao.comment || '');
+    } else {
+      // Se for pendente, inicia o formulário limpo
+      this.notaSelecionada.set(5);
+      this.comentarioOriginal.set('');
+    }
+    
     this.exibindoModal.set(true);
   }
 
@@ -72,6 +81,14 @@ export class Historico implements OnInit {
       }
     });
   }
+
+  public removerSessao(id: number): void {
+    this.movieService.removerSessaoPendente(id).subscribe({
+      next: () => this.carregarHistorico(),
+      error: (erro) => console.error('Erro ao remover sessão:', erro)
+    });
+  }
+  
 
   /**
    * Fecha o modal de feedback

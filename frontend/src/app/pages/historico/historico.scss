@@ -46,10 +46,7 @@ $border-color: #e2e0e8;
 
       &:hover {
         color: $purple-main;
-        
-        span {
-          transform: translateX(-2px);
-        }
+        span { transform: translateX(-2px); }
       }
     }
 
@@ -87,17 +84,8 @@ $border-color: #e2e0e8;
     border-bottom: 2px solid #f1f0f5;
     padding-bottom: 1rem;
 
-    h2 {
-      font-size: 1.35rem;
-      margin: 0;
-      font-weight: 700;
-    }
-
-    p {
-      font-size: 0.9rem;
-      color: $text-muted;
-      margin: 0.35rem 0 0 0;
-    }
+    h2 { font-size: 1.35rem; margin: 0; font-weight: 700; }
+    p { font-size: 0.9rem; color: $text-muted; margin: 0.35rem 0 0 0; }
   }
 }
 
@@ -149,16 +137,17 @@ $border-color: #e2e0e8;
       color: $text-muted;
       margin: 0;
     }
+
+    .action-buttons-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
   }
 }
 
-.item-pending {
-  border-left: 5px solid #f59e0b;
-}
-
-.item-watched {
-  border-left: 5px solid #10b981;
-}
+.item-pending { border-left: 5px solid #f59e0b; }
+.item-watched { border-left: 5px solid #10b981; }
 
 .btn-action-evaluate {
   background-color: $purple-main;
@@ -169,20 +158,41 @@ $border-color: #e2e0e8;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  align-self: flex-start;
-  transition: background-color 0.2s, transform 0.1s;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.25rem;
+  transition: background-color 0.2s;
+
+  &:hover { background-color: $purple-hover; }
+}
+
+.btn-action-remove {
+  background-color: transparent;
+  border: 1px solid #d1ceda;
+  color: #ef4444;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
 
   &:hover {
-    background-color: $purple-hover;
+    background-color: #fef2f2;
+    border-color: #ef4444;
   }
+}
 
-  &:active {
-    transform: scale(0.98);
-  }
+.btn-action-edit {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: $purple-main;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  width: fit-content;
+  margin-top: 0.25rem;
+
+  &:hover { text-decoration: underline; }
 }
 
 .stars-badge {
@@ -246,12 +256,7 @@ $border-color: #e2e0e8;
   justify-content: space-between;
   align-items: center;
 
-  h2 {
-    font-size: 1.25rem;
-    margin: 0;
-    font-weight: 700;
-  }
-
+  h2 { font-size: 1.25rem; margin: 0; font-weight: 700; }
   .btn-close {
     background: transparent;
     border: none;
@@ -268,25 +273,14 @@ $border-color: #e2e0e8;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-
-  p {
-    font-size: 0.95rem;
-    margin: 0;
-    color: #4b5563;
-    line-height: 1.4;
-  }
+  p { font-size: 0.95rem; margin: 0; color: #4b5563; line-height: 1.4; }
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-
-  label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: $text-dark;
-  }
+  label { font-size: 0.9rem; font-weight: 600; color: $text-dark; }
 
   .select-rating, .textarea-comment {
     width: 100%;
@@ -304,10 +298,7 @@ $border-color: #e2e0e8;
     }
   }
 
-  .textarea-comment {
-    resize: vertical;
-    font-family: inherit;
-  }
+  .textarea-comment { resize: vertical; font-family: inherit; }
 }
 
 .modal-footer {

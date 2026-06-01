@@ -1,14 +1,14 @@
 <div class="history-container">
-    <header class="history-header">
-        <div class="header-content">
-        <button class="btn-back" (click)="voltarAoDashboard()">
-            <span>←</span> Voltar para o Sorteio
-        </button>
-        <h1>Histórico de Sessões 🎬</h1>
-        </div>
-    </header>
+  <header class="history-header">
+    <div class="header-content">
+      <button class="btn-back" (click)="voltarAoDashboard()">
+        <span>←</span> Voltar para o Sorteio
+      </button>
+      <h1>Histórico de Sessões 🎬</h1>
+    </div>
+  </header>
     
-    <main class="history-layout">
+  <main class="history-layout">
     <section class="history-column">
       <div class="column-title">
         <h2>🍿 Próximas Sessões</h2>
@@ -27,7 +27,11 @@
               <div class="session-info">
                 <h3>{{ sessao.title }}</h3>
                 <p class="session-date">Sorteado em: {{ sessao.created_at | date:'dd/MM/yyyy às HH:mm' }}</p>
-                <button class="btn-action-evaluate" (click)="abrirModalAvaliacao(sessao)">⭐ Marcar como Assistido</button>
+                
+                <div class="action-buttons-group">
+                  <button class="btn-action-evaluate" (click)="abrirModalAvaliacao(sessao)">⭐ Marcar como Assistido</button>
+                  <button class="btn-action-remove" (click)="removerSessao(sessao.id)">Remover</button>
+                </div>
               </div>
             </div>
           }
@@ -56,13 +60,17 @@
               />
               <div class="session-info">
                 <h3>{{ sessao.title }}</h3>
+                
                 <div class="rating-stars">
                   <span class="stars-badge">⭐ {{ sessao.rating }}/5</span>
                 </div>
+
                 @if (sessao.comment) {
                   <p class="user-comment">"{{ sessao.comment }}"</p>
                 }
+
                 <p class="session-date">Assistido em: {{ sessao.updated_at | date:'dd/MM/yyyy' }}</p>
+                <button class="btn-action-edit" (click)="abrirModalAvaliacao(sessao)">✏️ Editar Avaliação</button>
               </div>
             </div>
           }
@@ -79,7 +87,7 @@
     <div class="modal-backdrop">
       <div class="modal-box">
         <div class="modal-header">
-          <h2>Avaliar Filme 🌟</h2>
+          <h2>{{ sessaoSelecionada().status === 'assistido' ? 'Editar Avaliação ✏️' : 'Avaliar Filme 🌟' }}</h2>
           <button class="btn-close" (click)="fecharModal()">✕</button>
         </div>
         
