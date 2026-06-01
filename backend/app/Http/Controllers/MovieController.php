@@ -56,7 +56,7 @@ class MovieController extends Controller
 
     /**
      * Salva uma nova sessão de filme sorteada e confirmada
-    */
+     */
     public function store(Request $request)
     {
         // Valida os dados mínimos que o Angular precisa enviar do filme vencedor
@@ -83,7 +83,7 @@ class MovieController extends Controller
 
     /**
      * Retorna o histórico de sessões do usuário logado
-    */
+     */
     public function history()
     {
         $history = MovieSession::where('user_id', Auth::id())
@@ -95,7 +95,7 @@ class MovieController extends Controller
 
     /**
      * Atualiza a sessão de filme com a nota e o comentário do grupo, marcando como assistida
-    */
+     */
     public function evaluate(Request $request, $id)
     {
         // Valida as notas aceitando apenas o intervalo de 1 a 5 estrelas
@@ -120,5 +120,20 @@ class MovieController extends Controller
             'message' => 'Sessão avaliada com sucesso!',
             'session' => $session
         ]);
+    }
+
+    /**
+     * Remove uma sessão pendente do histórico
+     */
+    public function destroy($id)
+    {
+        $session = MovieSession::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->where('status', 'pendente') // só permite remover se ainda não foi assistido
+            ->firstOrFail();
+
+        $session->delete();
+
+        return response()->json(['message' => 'Sessão removida com sucesso.']);
     }
 }

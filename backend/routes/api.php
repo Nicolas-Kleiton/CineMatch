@@ -18,4 +18,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/movie-sessions', [MovieController::class, 'store']);
     Route::get('/movie-sessions/history', [MovieController::class, 'history']);
     Route::put('/movie-sessions/{id}/evaluate', [MovieController::class, 'evaluate']);
+    Route::delete('/movie-sessions/{id}', [MovieController::class, 'destroy']);
 });
