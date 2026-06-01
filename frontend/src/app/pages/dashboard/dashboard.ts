@@ -178,7 +178,7 @@ export class Dashboard implements OnInit, OnDestroy {
         this.filmeSorteado.set(null);
         this.filmesSelecionados.set([]);
         this.foiEscolhaManual.set(false);
-        this.router.navigate(['/historico']);
+        this.router.navigate(['/history']);
       },
       error: (erro) => {
         console.error('Erro ao confirmar sessão no banco:', erro);
@@ -187,7 +187,7 @@ export class Dashboard implements OnInit, OnDestroy {
   }
   
   public irParaHistorico(): void {
-    this.router.navigate(['/historico']);
+    this.router.navigate(['/history']);
   }
 
   protected logout(): void {

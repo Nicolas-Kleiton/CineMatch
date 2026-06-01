@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie';
 
 @Component({
-  selector: 'app-historico',
+  selector: 'app-history',
   imports: [CommonModule, FormsModule],
-  templateUrl: './historico.html',
-  styleUrl: './historico.scss'
+  templateUrl: './history.html',
+  styleUrl: './history.scss'
 })
 
-export class Historico implements OnInit {
+export class History implements OnInit {
   private movieService = inject(MovieService);
   private router = inject(Router);
 
