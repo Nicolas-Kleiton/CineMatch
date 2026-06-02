@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, OnDestroy, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie';
+import { ToastService } from '../../services/toast';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
@@ -16,6 +17,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 export class Dashboard implements OnInit, OnDestroy {
   private router = inject(Router);
   private movieService = inject(MovieService);
+  private toastService = inject(ToastService);
 
   public SampleMovies = signal<any[]>([]);
   public termoPesquisa = signal<string>('');
@@ -61,6 +63,7 @@ export class Dashboard implements OnInit, OnDestroy {
         this.podeDarScrollDireita.set(filmes.length > 0);
       },
       error: (erro) => {
+        this.toastService.show('Erro ao buscar filmes!', 'error');
         console.error('Erro ao buscar filmes populares:', erro);
       }
     });
@@ -87,6 +90,7 @@ export class Dashboard implements OnInit, OnDestroy {
         }
       },
       error: (erro) => {
+        this.toastService.show('Erro na pesquisa!', 'error');
         console.error('Erro na pesquisa via Laravel:', erro);
       }
     });
@@ -102,6 +106,7 @@ export class Dashboard implements OnInit, OnDestroy {
     const jaExiste = this.filmesSelecionados().some(item => item.id === filme.id);
 
     if (jaExiste) {
+      this.toastService.show('Este filme já foi adicionado!', 'warning');
       return;
     }
     this.filmesSelecionados.set([...this.filmesSelecionados(), filme]);
@@ -116,6 +121,7 @@ export class Dashboard implements OnInit, OnDestroy {
     const lista = this.filmesSelecionados();
 
     if (lista.length === 0) {
+      this.toastService.show('Adicione pelo menos um filme para sortear!', 'info');
       return;
     }
 
@@ -181,6 +187,7 @@ export class Dashboard implements OnInit, OnDestroy {
         this.router.navigate(['/history']);
       },
       error: (erro) => {
+        this.toastService.show('Erro ao confirmar sessão no histórico!', 'error');
         console.error('Erro ao confirmar sessão no banco:', erro);
       }
     });

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { ToastService } from '../../services/toast';
 
 @Component({
   selector: 'app-register',
@@ -13,6 +14,7 @@ export class Register {
 
   private authService = inject(Auth);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   protected registerForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -24,6 +26,7 @@ export class Register {
     if(this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: (response) => {
+          this.toastService.show('Cadastro realizado com sucesso!', 'success');
           console.log('Usuário cadastrado com sucesso!', response);
 
           this.registerForm.reset();
@@ -31,6 +34,7 @@ export class Register {
           this.router.navigate(['/login']);
         },
         error: (error) => {
+          this.toastService.show('Erro ao cadastrar usuário! Tente novamente.', 'error');
           console.error('Erro ao cadastrar usuário!', error);
         }
       });
