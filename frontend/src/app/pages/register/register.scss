@@ -7,10 +7,12 @@ $card-border: rgba(255, 255, 255, 0.08);
 
 .auth-wrapper {
   height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -27,6 +29,8 @@ $card-border: rgba(255, 255, 255, 0.08);
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
   transform: translateY(20px);
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 @keyframes slideUp {
@@ -166,6 +170,29 @@ $card-border: rgba(255, 255, 255, 0.08);
         color: lighten($primary, 15%);
         text-decoration: underline;
       }
+    }
+  }
+}
+
+/* Responsividade Mobile */
+@media (max-width: 480px) {
+  .auth-wrapper {
+    padding: 1rem;
+  }
+
+  .auth-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-header {
+    margin-bottom: 2rem;
+
+    .logo-icon {
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
     }
   }
 }
