@@ -19,25 +19,35 @@
         @for (sessao of sessoes(); track sessao.id) {
           @if (sessao.status === 'pendente') {
             <div class="session-card item-pending">
-              <img 
-                [src]="sessao.poster_path ? 'https://image.tmdb.org/t/p/w200' + sessao.poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
-                [alt]="sessao.title"
-                class="session-poster"
-              />
+              <div class="poster-container">
+                <img 
+                  [src]="sessao.poster_path ? 'https://image.tmdb.org/t/p/w200' + sessao.poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
+                  [alt]="sessao.title"
+                  class="session-poster"
+                />
+                <div class="poster-overlay">
+                  <span class="play-icon">▶</span>
+                </div>
+              </div>
               <div class="session-info">
                 <h3>{{ sessao.title }}</h3>
-                <p class="session-date">Sorteado em: {{ sessao.created_at | date:'dd/MM/yyyy às HH:mm' }}</p>
+                <p class="session-date"><span class="icon-calendar">📅</span> {{ sessao.created_at | date:'dd/MM/yyyy às HH:mm' }}</p>
                 
                 <div class="action-buttons-group">
-                  <button class="btn-action-evaluate" (click)="abrirModalAvaliacao(sessao)">⭐ Marcar como Assistido</button>
-                  <button class="btn-action-remove" (click)="removerSessao(sessao.id)">Remover</button>
+                  <button class="btn-action-evaluate" (click)="abrirModalAvaliacao(sessao)">
+                    <span class="icon">⭐</span> Avaliar
+                  </button>
+                  <button class="btn-action-remove" title="Remover" (click)="removerSessao(sessao.id)">
+                    <span class="icon">✕</span>
+                  </button>
                 </div>
               </div>
             </div>
           }
         } @empty {
           <div class="empty-column-feedback">
-            <p>Nenhum filme na fila. Vá até o dashboard e realize um sorteio! 🎲</p>
+            <div class="empty-icon">🍿</div>
+            <p>Nenhum filme na fila.<br>Vá até o dashboard e realize um sorteio!</p>
           </div>
         }
       </div>
@@ -53,30 +63,40 @@
         @for (sessao of sessoes(); track sessao.id) {
           @if (sessao.status === 'assistido') {
             <div class="session-card item-watched">
-              <img 
-                [src]="sessao.poster_path ? 'https://image.tmdb.org/t/p/w200' + sessao.poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
-                [alt]="sessao.title"
-                class="session-poster"
-              />
+              <div class="poster-container">
+                <img 
+                  [src]="sessao.poster_path ? 'https://image.tmdb.org/t/p/w200' + sessao.poster_path : 'https://placehold.co/200x300/e2e0e8/6a677a?text=Sem+Cartaz'" 
+                  [alt]="sessao.title"
+                  class="session-poster"
+                />
+                <div class="status-badge-overlay">✔</div>
+              </div>
               <div class="session-info">
-                <h3>{{ sessao.title }}</h3>
-                
-                <div class="rating-stars">
-                  <span class="stars-badge">⭐ {{ sessao.rating }}/5</span>
+                <div class="info-header">
+                  <h3>{{ sessao.title }}</h3>
+                  <div class="rating-stars-pill">
+                    <span class="star-icon">★</span> {{ sessao.rating }}.0
+                  </div>
                 </div>
 
                 @if (sessao.comment) {
-                  <p class="user-comment">"{{ sessao.comment }}"</p>
+                  <div class="user-comment-box">
+                    <span class="quote-icon">"</span>
+                    <p>{{ sessao.comment }}</p>
+                  </div>
                 }
 
-                <p class="session-date">Assistido em: {{ sessao.updated_at | date:'dd/MM/yyyy' }}</p>
-                <button class="btn-action-edit" (click)="abrirModalAvaliacao(sessao)">✏️ Editar Avaliação</button>
+                <div class="session-footer">
+                  <p class="session-date">Assistido em: {{ sessao.updated_at | date:'dd/MM/yyyy' }}</p>
+                  <button class="btn-action-edit" (click)="abrirModalAvaliacao(sessao)">✏️ Editar</button>
+                </div>
               </div>
             </div>
           }
         } @empty {
           <div class="empty-column-feedback">
-            <p>Nenhum filme avaliado ainda. Conclua uma sessão ao lado! 🎬</p>
+            <div class="empty-icon">🎬</div>
+            <p>Nenhum filme avaliado ainda.<br>Conclua uma sessão ao lado!</p>
           </div>
         }
       </div>
