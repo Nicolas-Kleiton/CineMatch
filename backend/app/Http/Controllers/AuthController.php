@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -50,4 +51,52 @@ class AuthController extends Controller
             'user' => $user
         ], 200);
     }
+
+/**
+ * Atualiza os dados de perfil do usuário logado
+ */
+public function updateProfile(Request $request)
+{
+    $user = $request->user();
+
+    // Validaçãodos dados enviados
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => [
+            'required',
+            'string',
+            'email',
+            'max:255',
+            Rule::unique('users')->ignore($user->id),
+        ],
+        // A senha é opcional. Se enviada, precisa ter confirmação (password_confirmation) e mínimo de 8 caracteres
+        'password' => 'nullable|string|min:8|confirmed',
+    ]);
+
+    // Atualiza nome e e-mail
+    $user->name = $validated['name'];
+    $user->email = $validated['email'];
+
+    // Se o usuário digitou uma nova senha, criptografa antes de salvar
+    if (!empty($validated['password'])) {
+        $user->password = Hash::make($validated['password']);
+    }
+
+    $user->save();
+
+    return response()->json([
+        'message' => 'Perfil atualizado com sucesso!',
+        'user' => $user
+    ]);
+}
+
+/**
+ * Retorna os dados do usuário atualmente logado
+ */
+public function me(Request $request)
+{
+    return response()->json([
+        'user' => $request->user()
+    ], 200);
+}
 }

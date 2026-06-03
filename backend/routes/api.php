@@ -19,4 +19,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/movie-sessions/history', [MovieController::class, 'history']);
     Route::put('/movie-sessions/{id}/evaluate', [MovieController::class, 'evaluate']);
     Route::delete('/movie-sessions/{id}', [MovieController::class, 'destroy']);
+
+    // Rota para atualizar e ler o perfil
+    Route::get('/user/me', [AuthController::class, 'me']);
+    Route::put('/user/profile', [AuthController::class, 'updateProfile']);
 });
