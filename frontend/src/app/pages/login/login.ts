@@ -26,6 +26,9 @@ export class Login {
         next: (response) => {
           console.log('Login realizado com sucesso!', response);
           localStorage.setItem('cinematch_token', response.access_token);
+          if (response.user) {
+            localStorage.setItem('cinematch_user', JSON.stringify(response.user));
+          }
 
           this.loginForm.reset();
 

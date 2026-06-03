@@ -4,8 +4,9 @@
       <h1>CineMatch 🎬</h1>
     </div>
     <div class="user-actions">
-      <button (click)="irParaHistorico()" class="btn-history">Histórico de Sessões 🎬</button>
-      <button (click)="logout()" class="btn-logout">Sair da Conta</button>
+      <button (click)="irParaPerfil()" class="btn-history">Meu Perfil 👤</button>
+      <button (click)="irParaHistorico()" class="btn-history">Histórico 🎬</button>
+      <button (click)="logout()" class="btn-logout">Sair</button>
     </div>
   </header>
   
@@ -28,37 +29,39 @@
         </div>
       </div>
 
-      <div class="carousel-wrapper">
-        @if (mostrarSetaEsquerda()) {
-          <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -400)" title="Voltar">⟨</button>
-        }
-        
-        <div class="carousel-container" #carrossel (scroll)="checarLimitesScroll(carrossel)">
-          <div class="movies-carousel">
-            @for (filme of SampleMovies(); track filme.id) {
-              <div class="mini-movie-card">
-                <div class="mini-poster-wrapper">
-                  <img 
-                    [src]="filme.poster_path ? 'https://image.tmdb.org/t/p/w300' + filme.poster_path : 'https://placehold.co/300x450/e2e0e8/6a677a?text=Sem+Cartaz'" 
-                    [alt]="filme.title" 
-                  />
-                  <button class="btn-add-to-list" (click)="adicionarFilmeALista(filme)" title="Adicionar à lista">＋</button>
-                  <span class="mini-rating">⭐ {{ (filme.vote_average | number:'1.1-1') || '0.0' }}</span>
+      @if (SampleMovies().length > 0) {
+        <div class="carousel-wrapper">
+          @if (mostrarSetaEsquerda()) {
+            <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -400)" title="Voltar">⟨</button>
+          }
+          
+          <div class="carousel-container" #carrossel (scroll)="checarLimitesScroll(carrossel)">
+            <div class="movies-carousel">
+              @for (filme of SampleMovies(); track filme.id) {
+                <div class="mini-movie-card">
+                  <div class="mini-poster-wrapper">
+                    <img 
+                      [src]="filme.poster_path ? 'https://image.tmdb.org/t/p/w300' + filme.poster_path : 'https://placehold.co/300x450/e2e0e8/6a677a?text=Sem+Cartaz'" 
+                      [alt]="filme.title" 
+                    />
+                    <button class="btn-add-to-list" (click)="adicionarFilmeALista(filme)" title="Adicionar à lista">＋</button>
+                    <span class="mini-rating">⭐ {{ (filme.vote_average | number:'1.1-1') || '0.0' }}</span>
+                  </div>
+                  <h4>{{ filme.title }}</h4>
                 </div>
-                <h4>{{ filme.title }}</h4>
-              </div>
-            } @empty {
-              <div class="empty-search">
-                <p>Nenhum filme encontrado com o nome "{{ termoPesquisa() }}". Tente outra palavra-chave!</p>
-              </div>
-            }
+              }
+            </div>
           </div>
-        </div>
 
-        @if (mostrarSetaDireita()) {
-          <button class="arrow-btn right" (click)="moverCarrossel(carrossel, 400)" title="Avançar">⟩</button>
-        }
-      </div>
+          @if (mostrarSetaDireita()) {
+            <button class="arrow-btn right" (click)="moverCarrossel(carrossel, 400)" title="Avançar">⟩</button>
+          }
+        </div>
+      } @else {
+        <div class="empty-search">
+          <p>Nenhum filme encontrado com o nome "{{ termoPesquisa() }}". Tente outra palavra-chave!</p>
+        </div>
+      }
     </section>
 
     <section class="session-section"> 

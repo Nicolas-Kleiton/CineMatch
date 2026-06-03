@@ -17,4 +17,12 @@ export class Auth {
   public login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
+
+  public atualizarPerfil(dados: { name: string; email: string; password?: string; password_confirmation?: string }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user/profile`, dados);
+  }
+
+  public obterUsuarioLogado(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user/me`);
+  }
 }

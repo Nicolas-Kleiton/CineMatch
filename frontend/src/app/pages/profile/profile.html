@@ -1,0 +1,98 @@
+<div class="profile-container">
+  <header class="profile-header">
+    <div class="header-content">
+      <button class="btn-back" (click)="voltar()">
+        <span>←</span> Voltar para o Dashboard
+      </button>
+      <h1>Meu Perfil 👤</h1>
+    </div>
+  </header>
+
+  <main class="profile-layout">
+    <section class="profile-column">
+      <div class="column-title">
+        <h2>Gerenciamento de Conta</h2>
+        <p>Visualize ou atualize suas informações pessoais</p>
+      </div>
+
+      @if (!isEditing) {
+        <div class="profile-info-card">
+          <div class="info-group">
+            <label>Usuário</label>
+            <p class="info-text">{{ currentUser.name || 'Não informado' }}</p>
+          </div>
+          
+          <div class="info-group">
+            <label>E-mail</label>
+            <p class="info-text">{{ currentUser.email || 'Não informado' }}</p>
+          </div>
+
+          <div class="action-buttons view-mode">
+            <button type="button" class="btn-submit" (click)="toggleEdit()">
+              ✏️ Editar Informações
+            </button>
+          </div>
+        </div>
+      } @else {
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form-card">
+          <div class="form-group">
+            <label for="name">Usuário</label>
+            <div class="input-wrapper">
+              <input 
+                id="name" 
+                type="text" 
+                formControlName="name" 
+                placeholder="Como quer ser chamado"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <div class="input-wrapper">
+              <input 
+                id="email" 
+                type="email" 
+                formControlName="email" 
+                placeholder="seu@email.com"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Nova Senha (opcional)</label>
+            <div class="input-wrapper">
+              <input 
+                id="password" 
+                type="password" 
+                formControlName="password" 
+                placeholder="Mínimo 8 caracteres"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password_confirmation">Confirmar Nova Senha</label>
+            <div class="input-wrapper">
+              <input 
+                id="password_confirmation" 
+                type="password" 
+                formControlName="password_confirmation" 
+                placeholder="Repita a nova senha"
+              />
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button type="button" class="btn-secondary" (click)="cancelEdit()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-submit" [disabled]="profileForm.invalid || !formMudou">
+              Salvar Alterações
+            </button>
+          </div>
+        </form>
+      }
+    </section>
+  </main>
+</div>

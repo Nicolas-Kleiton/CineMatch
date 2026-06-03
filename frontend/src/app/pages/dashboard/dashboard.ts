@@ -197,6 +197,10 @@ export class Dashboard implements OnInit, OnDestroy {
     this.router.navigate(['/history']);
   }
 
+  public irParaPerfil(): void {
+    this.router.navigate(['/profile']);
+  }
+
   protected logout(): void {
     localStorage.removeItem('cinematch_token');
     this.router.navigate(['/login']);
