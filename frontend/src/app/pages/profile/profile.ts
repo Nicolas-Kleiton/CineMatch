@@ -68,6 +68,10 @@ export class Profile implements OnInit {
   }
 
   public toggleEdit(): void {
+    if (this.currentUser?.email === 'visitante@cinematch.com') {
+      this.toastService.show('O perfil de Visitante não pode ser alterado.', 'error');
+      return;
+    }
     this.isEditing = true;
     this.cdr.detectChanges();
   }

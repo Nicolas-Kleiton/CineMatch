@@ -18,6 +18,10 @@ export class Auth {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
 
+  public guestLogin(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/guest-login`, {});
+  }
+
   public atualizarPerfil(dados: { name: string; email: string; password?: string; password_confirmation?: string }): Observable<any> {
     return this.http.put(`${this.apiUrl}/user/profile`, dados);
   }

@@ -7,6 +7,7 @@ use App\Http\Controllers\MovieController;
 Route::post("/register", [AuthController::class,"register"]);
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/guest-login', [AuthController::class, 'guestLogin']);
 
 Route::middleware('auth:sanctum')->group(function () {
     

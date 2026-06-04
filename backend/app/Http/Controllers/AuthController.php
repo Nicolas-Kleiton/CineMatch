@@ -52,12 +52,41 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Login rápido e automático para Visitantes (Portfólio)
+     */
+    public function guestLogin() {
+        $user = User::firstOrCreate(
+            ['email' => 'visitante@cinematch.com'],
+            [
+                'name' => 'Visitante',
+                'password' => Hash::make('visitante123')
+            ]
+        );
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message'=> 'Login de visitante efetuado com sucesso!',
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => $user
+        ], 200);
+    }
+
 /**
  * Atualiza os dados de perfil do usuário logado
  */
 public function updateProfile(Request $request)
 {
     $user = $request->user();
+
+    // Bloqueia qualquer tentativa de edição no perfil de visitante (Portfólio)
+    if ($user->email === 'visitante@cinematch.com') {
+        return response()->json([
+            'message' => 'O perfil de Visitante é bloqueado para edições.'
+        ], 403);
+    }
 
     // Validaçãodos dados enviados
     $validated = $request->validate([

@@ -41,4 +41,21 @@ export class Login {
       });
     }
   }
+
+  protected loginAsGuest(): void {
+    this.authService.guestLogin().subscribe({
+      next: (response) => {
+        console.log('Login de visitante realizado com sucesso!', response);
+        localStorage.setItem('cinematch_token', response.access_token);
+        if (response.user) {
+          localStorage.setItem('cinematch_user', JSON.stringify(response.user));
+        }
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        this.toastService.show('Erro ao entrar como visitante!', 'error');
+        console.error('Erro no login de visitante', error);
+      },
+    });
+  }
 }
