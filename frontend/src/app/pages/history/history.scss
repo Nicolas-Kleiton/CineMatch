@@ -63,11 +63,15 @@ $bg-glass: rgba(255, 255, 255, 0.03);
 
 .history-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 2.5rem;
   padding: 2.5rem;
   max-width: 1600px;
   margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .history-column {
