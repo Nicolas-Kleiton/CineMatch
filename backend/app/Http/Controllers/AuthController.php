@@ -64,6 +64,9 @@ class AuthController extends Controller
             ]
         );
 
+        // Limpa o histórico antigo toda vez que alguém clica no botão "Visitante"
+        \App\Models\MovieSession::where('user_id', $user->id)->delete();
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
