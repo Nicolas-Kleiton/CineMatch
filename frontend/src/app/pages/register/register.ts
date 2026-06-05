@@ -37,7 +37,11 @@ export class Register {
           this.router.navigate(['/login']);
         },
         error: (error) => {
-          this.toastService.show('Erro ao cadastrar usuário! Tente novamente.', 'error');
+          if (error.status === 422 && error.error?.errors?.email) {
+            this.toastService.show('Este e-mail já está em uso!', 'error');
+          } else {
+            this.toastService.show('Erro ao cadastrar usuário! Tente novamente.', 'error');
+          }
           console.error('Erro ao cadastrar usuário!', error);
           this.isSubmitting.set(false);
         }
