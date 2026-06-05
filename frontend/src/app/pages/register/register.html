@@ -44,8 +44,8 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">
-        <span>Criar Conta</span>
+      <button type="submit" class="btn-submit" [disabled]="registerForm.invalid || isSubmitting()">
+        <span>{{ isSubmitting() ? '⏳ Registrando...' : 'Criar Conta' }}</span>
       </button>
 
       <div class="auth-footer">

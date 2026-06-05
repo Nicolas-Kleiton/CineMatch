@@ -17,6 +17,7 @@ export class History implements OnInit {
 
   // Signal para armazenar todas as sessões vindas do banco
   public sessoes = signal<any[]>([]);
+  public isLoadingHistory = signal<boolean>(true);
 
   // Signals para controlar o estado do Modal de Avaliação
   public exibindoModal = signal<boolean>(false);
@@ -25,6 +26,7 @@ export class History implements OnInit {
   // Campos do formulário de avaliação
   public notaSelecionada = signal<number>(5);
   public comentarioOriginal = signal<string>('');
+  public isSubmitting = signal<boolean>(false);
 
   ngOnInit(): void {
     this.carregarHistorico();
@@ -34,9 +36,16 @@ export class History implements OnInit {
    * Busca as sessões gravadas no Laravel
    */
   public carregarHistorico(): void {
+    this.isLoadingHistory.set(true);
     this.movieService.obterHistoricoSessoes().subscribe({
-      next: (dados) => this.sessoes.set(dados),
-      error: (erro) => console.error('Erro ao buscar histórico:', erro)
+      next: (dados) => {
+        this.sessoes.set(dados);
+        this.isLoadingHistory.set(false);
+      },
+      error: (erro) => {
+        console.error('Erro ao buscar histórico:', erro);
+        this.isLoadingHistory.set(false);
+      }
     });
   }
 
@@ -67,6 +76,7 @@ export class History implements OnInit {
     
     if (!sessaoId) return;
 
+    this.isSubmitting.set(true);
     this.movieService.avaliarSessao(
       sessaoId, 
       this.notaSelecionada(), 
@@ -75,9 +85,11 @@ export class History implements OnInit {
       next: (resposta) => {
         this.fecharModal();
         this.carregarHistorico(); // Atualiza a tela reativamente
+        this.isSubmitting.set(false);
       },
       error: (erro) => {
         console.error('Erro ao salvar avaliação:', erro);
+        this.isSubmitting.set(false);
       }
     });
   }

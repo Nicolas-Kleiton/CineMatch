@@ -29,7 +29,11 @@
         </div>
       </div>
 
-      @if (SampleMovies().length > 0) {
+      @if (isLoading()) {
+        <div class="empty-search">
+          <p>⏳ Buscando filmes...</p>
+        </div>
+      } @else if (SampleMovies().length > 0) {
         <div class="carousel-wrapper">
           @if (mostrarSetaEsquerda()) {
             <button class="arrow-btn left" (click)="moverCarrossel(carrossel, -400)" title="Voltar">⟨</button>
@@ -122,8 +126,8 @@
                 @if (!estaSorteando()) {
                   <p class="winner-overview">{{ filmeSorteado()?.overview || 'Sinopse não disponível.' }}</p>
                   <div class="winner-actions">
-                    <button class="btn-primary btn-confirm" (click)="confirmarFilmeSorteado()">
-                      ✅ Confirmar e Assistir
+                    <button class="btn-primary btn-confirm" (click)="confirmarFilmeSorteado()" [disabled]="isSubmitting()">
+                      {{ isSubmitting() ? '⏳ Salvando...' : '✅ Confirmar e Assistir' }}
                     </button>
                     
                     @if (foiEscolhaManual()) {

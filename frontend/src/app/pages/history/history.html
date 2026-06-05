@@ -16,7 +16,12 @@
       </div>
 
       <div class="sessions-list">
-        @for (sessao of sessoes(); track sessao.id) {
+        @if (isLoadingHistory()) {
+          <div class="empty-column-feedback">
+            <p>⏳ Carregando sessões...</p>
+          </div>
+        } @else {
+          @for (sessao of sessoes(); track sessao.id) {
           @if (sessao.status === 'pendente') {
             <div class="session-card item-pending">
               <div class="poster-container">
@@ -50,6 +55,7 @@
             <p>Nenhum filme na fila.<br>Vá até o dashboard e realize um sorteio!</p>
           </div>
         }
+        }
       </div>
     </section>
 
@@ -60,7 +66,12 @@
       </div>
 
       <div class="sessions-list">
-        @for (sessao of sessoes(); track sessao.id) {
+        @if (isLoadingHistory()) {
+          <div class="empty-column-feedback">
+            <p>⏳ Carregando histórico...</p>
+          </div>
+        } @else {
+          @for (sessao of sessoes(); track sessao.id) {
           @if (sessao.status === 'assistido') {
             <div class="session-card item-watched">
               <div class="poster-container">
@@ -98,6 +109,7 @@
             <div class="empty-icon">🎬</div>
             <p>Nenhum filme avaliado ainda.<br>Conclua uma sessão ao lado!</p>
           </div>
+        }
         }
       </div>
     </section>
@@ -137,8 +149,10 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn-cancel" (click)="fecharModal()">Cancelar</button>
-          <button class="btn-submit-evaluation" (click)="enviarAvaliacao()">Salvar Avaliação</button>
+          <button class="btn-cancel" (click)="fecharModal()" [disabled]="isSubmitting()">Cancelar</button>
+          <button class="btn-submit-evaluation" (click)="enviarAvaliacao()" [disabled]="isSubmitting()">
+            {{ isSubmitting() ? '⏳ Salvando...' : 'Salvar Avaliação' }}
+          </button>
         </div>
       </div>
     </div>

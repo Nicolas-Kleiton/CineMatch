@@ -31,14 +31,14 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">
-        <span>Entrar</span>
+      <button type="submit" class="btn-submit" [disabled]="loginForm.invalid || isSubmitting() || isGuestSubmitting()">
+        <span>{{ isSubmitting() ? '⏳ Entrando...' : 'Entrar' }}</span>
       </button>
 
       <div style="margin-top: 10px; text-align: center; color: #6a677a; font-size: 14px;">ou</div>
 
-      <button type="button" class="btn-submit" style="background-color: #4f46e5; margin-top: 10px;" (click)="loginAsGuest()">
-        <span>🚀 Entrar como Visitante</span>
+      <button type="button" class="btn-submit" style="background-color: #4f46e5; margin-top: 10px;" (click)="loginAsGuest()" [disabled]="isSubmitting() || isGuestSubmitting()">
+        <span>{{ isGuestSubmitting() ? '⏳ Entrando como Visitante...' : '🚀 Entrar como Visitante' }}</span>
       </button>
 
       <div class="auth-footer">

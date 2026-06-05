@@ -20,10 +20,12 @@ export class Dashboard implements OnInit, OnDestroy {
   private toastService = inject(ToastService);
 
   public SampleMovies = signal<any[]>([]);
+  public isLoading = signal<boolean>(true);
   public termoPesquisa = signal<string>('');
   public filmesSelecionados = signal<any[]>([]);
   public filmeSorteado = signal<any | null>(null);
   public estaSorteando = signal<boolean>(false);
+  public isSubmitting = signal<boolean>(false);
   public mostrarSetaEsquerda = signal<boolean>(false);
   
   // Controla o estado de origem para alternar os textos dos botões do painel de resultado
@@ -56,15 +58,18 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   public obterCatalogoFilmes(): void {
+    this.isLoading.set(true);
     this.movieService.getPopularMovies().subscribe({
       next: (filmes) => {
         this.SampleMovies.set(filmes);
         this.mostrarSetaEsquerda.set(false);
         this.podeDarScrollDireita.set(filmes.length > 0);
+        this.isLoading.set(false);
       },
       error: (erro) => {
         this.toastService.show('Erro ao buscar filmes!', 'error');
         console.error('Erro ao buscar filmes populares:', erro);
+        this.isLoading.set(false);
       }
     });
   }
@@ -79,6 +84,7 @@ export class Dashboard implements OnInit, OnDestroy {
       return;
     }
 
+    this.isLoading.set(true);
     this.movieService.searchMovies(termo).subscribe({
       next: (resultados) => {
         this.SampleMovies.set(resultados);
@@ -88,10 +94,12 @@ export class Dashboard implements OnInit, OnDestroy {
           container.scrollLeft = 0;
           setTimeout(() => this.checarLimitesScroll(container), 50);
         }
+        this.isLoading.set(false);
       },
       error: (erro) => {
         this.toastService.show('Erro na pesquisa!', 'error');
         console.error('Erro na pesquisa via Laravel:', erro);
+        this.isLoading.set(false);
       }
     });
   }
@@ -179,16 +187,19 @@ export class Dashboard implements OnInit, OnDestroy {
     
     if (!filme) return;
 
+    this.isSubmitting.set(true);
     this.movieService.salvarSessaoSorteada(filme).subscribe({
       next: () => {
         this.filmeSorteado.set(null);
         this.filmesSelecionados.set([]);
         this.foiEscolhaManual.set(false);
+        this.isSubmitting.set(false);
         this.router.navigate(['/history']);
       },
       error: (erro) => {
         this.toastService.show('Erro ao confirmar sessão no histórico!', 'error');
         console.error('Erro ao confirmar sessão no banco:', erro);
+        this.isSubmitting.set(false);
       }
     });
   }

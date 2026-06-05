@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
@@ -22,20 +22,24 @@ export class Register {
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
+  public isSubmitting = signal<boolean>(false);
+
   protected onSubmit(): void {
     if(this.registerForm.valid) {
+      this.isSubmitting.set(true);
       this.authService.register(this.registerForm.value).subscribe({
         next: (response) => {
           this.toastService.show('Cadastro realizado com sucesso!', 'success');
           console.log('Usuário cadastrado com sucesso!', response);
 
           this.registerForm.reset();
-
+          this.isSubmitting.set(false);
           this.router.navigate(['/login']);
         },
         error: (error) => {
           this.toastService.show('Erro ao cadastrar usuário! Tente novamente.', 'error');
           console.error('Erro ao cadastrar usuário!', error);
+          this.isSubmitting.set(false);
         }
       });
     }
