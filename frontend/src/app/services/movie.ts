@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +9,9 @@ import { Observable } from 'rxjs';
 export class MovieService {
   private http = inject(HttpClient);
   
-  private apiUrl = 'http://localhost:8000/api/movies/popular';
-  private searchUrl = 'http://localhost:8000/api/movies/search';
-  private sessionUrl = 'http://localhost:8000/api/movie-sessions';
+  private apiUrl = `${environment.apiUrl}/movies/popular`;
+  private searchUrl = `${environment.apiUrl}/movies/search`;
+  private sessionUrl = `${environment.apiUrl}/movie-sessions`;
 
   public getPopularMovies(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
