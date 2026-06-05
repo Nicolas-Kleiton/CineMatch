@@ -101,8 +101,8 @@ public function updateProfile(Request $request)
             'max:255',
             Rule::unique('users')->ignore($user->id),
         ],
-        // A senha é opcional. Se enviada, precisa ter confirmação (password_confirmation) e mínimo de 8 caracteres
-        'password' => 'nullable|string|min:8|confirmed',
+        // A senha é opcional. Se enviada, precisa ter confirmação (password_confirmation) e mínimo de 6 caracteres
+        'password' => 'nullable|string|min:6|confirmed',
     ]);
 
     // Atualiza nome e e-mail
