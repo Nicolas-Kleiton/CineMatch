@@ -44,12 +44,18 @@
         </div>
       </div>
 
+      @if (registerError()) {
+        <div class="error-message">
+          ⚠️ {{ registerError() }}
+        </div>
+      }
+
       <button type="submit" class="btn-submit" [disabled]="registerForm.invalid || isSubmitting()">
         <span>{{ isSubmitting() ? '⏳ Registrando...' : 'Criar Conta' }}</span>
       </button>
 
       <div class="auth-footer">
-        <p>Já possui conta? <a href="/login">Entre aqui</a></p>
+        <p>Já possui conta? <a routerLink="/login">Entre aqui</a></p>
       </div>
     </form>
   </div>

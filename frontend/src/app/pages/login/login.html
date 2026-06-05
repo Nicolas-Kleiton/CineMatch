@@ -31,6 +31,12 @@
         </div>
       </div>
 
+      @if (loginError()) {
+        <div class="error-message">
+          ⚠️ {{ loginError() }}
+        </div>
+      }
+
       <button type="submit" class="btn-submit" [disabled]="loginForm.invalid || isSubmitting() || isGuestSubmitting()">
         <span>{{ isSubmitting() ? '⏳ Entrando...' : 'Entrar' }}</span>
       </button>
@@ -42,7 +48,7 @@
       </button>
 
       <div class="auth-footer">
-        <p>Ainda não tem uma conta? <a href="/register">Registre-se aqui</a></p>
+        <p>Ainda não tem uma conta? <a routerLink="/register">Registre-se aqui</a></p>
       </div>
     </form>
   </div>

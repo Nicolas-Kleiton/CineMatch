@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { ToastService } from '../../services/toast';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -23,10 +23,12 @@ export class Register {
   });
 
   public isSubmitting = signal<boolean>(false);
+  public registerError = signal<string | null>(null);
 
   protected onSubmit(): void {
     if(this.registerForm.valid) {
       this.isSubmitting.set(true);
+      this.registerError.set(null);
       this.authService.register(this.registerForm.value).subscribe({
         next: (response) => {
           this.toastService.show('Cadastro realizado com sucesso!', 'success');
@@ -38,9 +40,9 @@ export class Register {
         },
         error: (error) => {
           if (error.status === 422 && error.error?.errors?.email) {
-            this.toastService.show('Este e-mail já está em uso!', 'error');
+            this.registerError.set('Este e-mail já está em uso!');
           } else {
-            this.toastService.show('Erro ao cadastrar usuário! Tente novamente.', 'error');
+            this.registerError.set('Erro ao cadastrar usuário! Tente novamente.');
           }
           console.error('Erro ao cadastrar usuário!', error);
           this.isSubmitting.set(false);
