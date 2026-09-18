@@ -9,22 +9,22 @@ Um aplicativo web full-stack desenvolvido para ajudar você (ou seu grupo) a org
 - **Busca e Seleção:** Pesquise filmes no catálogo e adicione as opções que você está com vontade de assistir hoje.
 - **Sorteio ou Escolha Direta:** Está na dúvida do que assistir? Use a roleta para o sistema sortear um filme da sua lista. Já sabe o que quer ver? Você pode pular o sorteio e selecionar o filme diretamente. O app se adapta perfeitamente para uso individual ou em grupo!
 - **Avaliações e Histórico:** Após a sessão, o filme fica salvo no seu histórico. Lá você pode dar sua nota e marcar como favorito para não esquecer dos melhores.
-- **Acesso de Visitante:** Criei um login de Visitante para quem quer testar a plataforma na hora. Os dados gerados nessa sessão são descartados depois, garantindo que o banco de dados oficial continue limpo.
-- **Autenticação e Segurança:** Login e registro reais com proteção de rotas e armazenamento seguro de sessão usando tokens JWT.
+- **Acesso de Visitante:** Criei um login de Visitante para quem quer testar a plataforma na hora. Cada visitante recebe uma conta temporária própria (assim várias pessoas podem testar ao mesmo tempo sem interferir umas nas outras), que é removida automaticamente após 24 horas, mantendo o banco de dados limpo.
+- **Autenticação e Segurança:** Login e registro reais com proteção de rotas, tokens de acesso com expiração (Laravel Sanctum), logout que revoga o token no servidor e rate limiting contra força bruta.
 
 > 💡 **Decisão de Arquitetura (E-mails):** A funcionalidade de envio de e-mails (para validação de conta e recuperação de senha) não foi incluída no escopo deste projeto. Provedores de nuvem gratuitos — como o Render, onde o backend está hospedado — bloqueiam conexões de saída nas portas SMTP padrão como medida anti-spam, inviabilizando o disparo de e-mails via SMTP tradicionais em ambientes não-pagos.
 
 ## 🛠 Tecnologias
 
 **Frontend**
-- Angular (v17+)
+- Angular 21 (standalone components, Signals)
 - TypeScript
 - SCSS Puro e Design Responsivo
 - Hospedagem: Vercel
 
 **Backend**
-- PHP / Laravel (v11)
-- Laravel Sanctum (Tokens JWT)
+- PHP 8.3 / Laravel 13
+- Laravel Sanctum (tokens de API)
 - Banco de Dados: MySQL (Hospedado na Aiven)
 - Docker
 - Hospedagem da API: Render
@@ -32,7 +32,7 @@ Um aplicativo web full-stack desenvolvido para ajudar você (ou seu grupo) a org
 ## 🚀 Como Rodar o Projeto Localmente
 
 ### Pré-requisitos
-- PHP 8.2+
+- PHP 8.3+
 - Composer
 - Node.js 18+
 - Angular CLI
@@ -47,7 +47,7 @@ cd backend
 # Instale as dependências
 composer install
 
-# Crie o arquivo .env (não esqueça de preencher suas configs de BD e SMTP)
+# Crie o arquivo .env (preencha as configs do banco e o TMDB_BEARER_TOKEN)
 cp .env.example .env
 
 # Gere a chave de aplicação do Laravel
@@ -72,9 +72,23 @@ npm install
 # Inicie o servidor do Angular
 ng serve
 ```
-*(Nota: Certifique-se de que o arquivo `src/environments/environment.ts` esteja apontando para a sua API local `http://127.0.0.1:8000/api` para testes).*
+*(Nota: o `ng serve` usa automaticamente o `src/environments/environment.development.ts`, que aponta para a API local `http://127.0.0.1:8000/api`. O build de produção usa o `environment.ts`, que aponta para a API no Render.)*
 
 Acesse `http://localhost:4200` no seu navegador para ver o projeto rodando.
+
+### 3. Rodando os testes
+
+```bash
+# Backend (usa SQLite em memória, não precisa de MySQL)
+cd backend
+php artisan test
+
+# Frontend (Vitest)
+cd frontend
+ng test
+```
+
+> 🔑 **TMDB:** o catálogo de filmes vem da API do [The Movie Database](https://www.themoviedb.org/settings/api). Gere um *API Read Access Token* gratuito e coloque-o em `TMDB_BEARER_TOKEN` no `.env` do backend.
 
 ## 🤝 Quer falar comigo?
 
