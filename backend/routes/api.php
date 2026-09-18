@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
 
-Route::post("/register", [AuthController::class,"register"]);
+// Rotas públicas de autenticação: limite de 10 tentativas por minuto por IP (evita força bruta)
+Route::middleware('throttle:10,1')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/guest-login', [AuthController::class, 'guestLogin']);
+});
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/guest-login', [AuthController::class, 'guestLogin']);
-
-Route::middleware('auth:sanctum')->group(function () {
+// Rotas autenticadas: limite de 60 requisições por minuto por usuário
+Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     
     // Catálogo e Busca de Filmes
     Route::get('/movies/popular', [MovieController::class, 'getPopular']);
