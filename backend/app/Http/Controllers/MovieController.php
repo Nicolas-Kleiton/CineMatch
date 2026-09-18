@@ -19,10 +19,11 @@ class MovieController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->query('query');
+        $query = trim((string) $request->query('query', ''));
 
-        if (!$query) {
-            return response()->json(['error' => ''], 404);
+        // Busca vazia não é erro: simplesmente não há resultados
+        if ($query === '') {
+            return response()->json([]);
         }
 
         return $this->buscarNoTmdb('/search/movie', [
