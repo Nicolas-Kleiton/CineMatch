@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal, OnDestroy, computed } from '@angular
 import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie';
 import { ToastService } from '../../services/toast';
+import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
@@ -19,6 +20,7 @@ export class Dashboard implements OnInit, OnDestroy {
   private router = inject(Router);
   private movieService = inject(MovieService);
   private toastService = inject(ToastService);
+  private authService = inject(Auth);
 
   public SampleMovies = signal<Movie[]>([]);
   public isLoading = signal<boolean>(true);
@@ -214,7 +216,6 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   protected logout(): void {
-    localStorage.removeItem('cinematch_token');
-    this.router.navigate(['/login']);
+    this.authService.logout().subscribe(() => this.router.navigate(['/login']));
   }
 }

@@ -29,13 +29,7 @@ export class Login {
       this.isSubmitting.set(true);
       this.loginError.set(null);
       this.authService.login(this.loginForm.getRawValue()).subscribe({
-        next: (response) => {
-          console.log('Login realizado com sucesso!', response);
-          localStorage.setItem('cinematch_token', response.access_token);
-          if (response.user) {
-            localStorage.setItem('cinematch_user', JSON.stringify(response.user));
-          }
-
+        next: () => {
           this.loginForm.reset();
           this.isSubmitting.set(false);
           this.router.navigate(['/dashboard']);
@@ -53,12 +47,7 @@ export class Login {
     this.isGuestSubmitting.set(true);
     this.loginError.set(null);
     this.authService.guestLogin().subscribe({
-      next: (response) => {
-        console.log('Login de visitante realizado com sucesso!', response);
-        localStorage.setItem('cinematch_token', response.access_token);
-        if (response.user) {
-          localStorage.setItem('cinematch_user', JSON.stringify(response.user));
-        }
+      next: () => {
         this.isGuestSubmitting.set(false);
         this.router.navigate(['/dashboard']);
       },

@@ -33,15 +33,14 @@ export class Profile implements OnInit {
   }
 
   private carregarDadosUsuario(): void {
-    const userData = localStorage.getItem('cinematch_user');
-    if (userData) {
-      this.atualizarCampos(JSON.parse(userData));
+    const usuarioSalvo = this.authService.obterUsuarioSalvo();
+    if (usuarioSalvo) {
+      this.atualizarCampos(usuarioSalvo);
     }
 
     this.authService.obterUsuarioLogado().subscribe({
       next: (response) => {
         if (response.user) {
-          localStorage.setItem('cinematch_user', JSON.stringify(response.user));
           this.atualizarCampos(response.user);
           this.cdr.detectChanges();
         }
@@ -106,7 +105,6 @@ export class Profile implements OnInit {
       this.authService.atualizarPerfil(dados).subscribe({
         next: (response) => {
           if (response.user) {
-            localStorage.setItem('cinematch_user', JSON.stringify(response.user));
             this.currentUser = response.user;
           }
           
