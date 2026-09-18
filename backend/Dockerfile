@@ -21,4 +21,8 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 RUN chmod -R 775 storage bootstrap/cache
 
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+# Permite atender várias requisições em paralelo (o padrão do artisan serve é uma por vez)
+ENV PHP_CLI_SERVER_WORKERS=4
+
+# Cacheia a configuração com as variáveis de ambiente do Render antes de subir o servidor
+CMD php artisan migrate --force && php artisan config:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
