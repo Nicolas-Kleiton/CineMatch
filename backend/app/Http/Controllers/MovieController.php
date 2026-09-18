@@ -12,46 +12,42 @@ class MovieController extends Controller
 {
     public function getPopular()
     {
-        $token = env('TMDB_BEARER_TOKEN');
-        $baseUrl = env('TMDB_BASE_URL');
-
-        $response = Http::withToken($token)
-            ->get("{$baseUrl}/movie/popular", [
-                'language' => 'pt-BR',
-                'page' => 1
-            ]);
-
-            if ($response->successful()) {
-                return response()->json($response->json()['results']);
-            }
-
-            return response()->json(['error' => 'Não foi possível buscar os filmes'], 500);
+        return $this->buscarNoTmdb('/movie/popular', [
+            'page' => 1,
+        ]);
     }
 
     public function search(Request $request)
     {
         $query = $request->query('query');
-        
-        if(!$query){
-            return response()->json(['error'=> ''],404);
+
+        if (!$query) {
+            return response()->json(['error' => ''], 404);
         }
 
-        $token = env('TMDB_BEARER_TOKEN');
-        $baseUrl = env('TMDB_BASE_URL');
+        return $this->buscarNoTmdb('/search/movie', [
+            'query'         => $query,
+            'page'          => 1,
+            'include_adult' => false,
+        ]);
+    }
 
-        $response = Http::withToken($token)
-            ->get("{$baseUrl}/search/movie", [
-                'language'      => 'pt-BR',
-                'query'         => $query,
-                'page'          => 1,
-                'include_adult' => false,
+    /**
+     * Faz a requisição ao TMDB e devolve apenas a lista de resultados
+     */
+    private function buscarNoTmdb(string $endpoint, array $params)
+    {
+        $response = Http::withToken(config('services.tmdb.token'))
+            ->get(config('services.tmdb.base_url') . $endpoint, [
+                'language' => 'pt-BR',
+                ...$params,
             ]);
 
-            if ($response->successful()) {
-                return response()->json($response->json()['results']);
-            }
+        if ($response->successful()) {
+            return response()->json($response->json()['results']);
+        }
 
-            return response()->json(['error'=> 'Não foi possível buscar os filmes'], 500);
+        return response()->json(['error' => 'Não foi possível buscar os filmes'], 502);
     }
 
     /**
