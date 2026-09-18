@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie';
+import { ToastService } from '../../services/toast';
 import { MovieSession } from '../../models/movie-session';
 
 @Component({
@@ -15,6 +16,7 @@ import { MovieSession } from '../../models/movie-session';
 export class History implements OnInit {
   private movieService = inject(MovieService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   // Signal para armazenar todas as sessões vindas do banco
   public sessoes = signal<MovieSession[]>([]);
@@ -44,6 +46,7 @@ export class History implements OnInit {
         this.isLoadingHistory.set(false);
       },
       error: (erro) => {
+        this.toastService.show('Erro ao carregar o histórico!', 'error');
         console.error('Erro ao buscar histórico:', erro);
         this.isLoadingHistory.set(false);
       }
@@ -83,22 +86,34 @@ export class History implements OnInit {
       this.notaSelecionada(), 
       this.comentarioOriginal()
     ).subscribe({
-      next: (resposta) => {
+      next: () => {
         this.fecharModal();
         this.carregarHistorico(); // Atualiza a tela reativamente
         this.isSubmitting.set(false);
+        this.toastService.show('Avaliação salva com sucesso!', 'success');
       },
       error: (erro) => {
+        this.toastService.show('Erro ao salvar avaliação!', 'error');
         console.error('Erro ao salvar avaliação:', erro);
         this.isSubmitting.set(false);
       }
     });
   }
 
-  public removerSessao(id: number): void {
-    this.movieService.removerSessaoPendente(id).subscribe({
-      next: () => this.carregarHistorico(),
-      error: (erro) => console.error('Erro ao remover sessão:', erro)
+  public removerSessao(sessao: MovieSession): void {
+    if (!confirm(`Remover "${sessao.title}" da sua lista?`)) {
+      return;
+    }
+
+    this.movieService.removerSessaoPendente(sessao.id).subscribe({
+      next: () => {
+        this.carregarHistorico();
+        this.toastService.show('Filme removido da lista.', 'success');
+      },
+      error: (erro) => {
+        this.toastService.show('Erro ao remover o filme!', 'error');
+        console.error('Erro ao remover sessão:', erro);
+      }
     });
   }
   
