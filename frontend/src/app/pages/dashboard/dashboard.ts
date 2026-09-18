@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Movie } from '../../models/movie';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,11 +20,11 @@ export class Dashboard implements OnInit, OnDestroy {
   private movieService = inject(MovieService);
   private toastService = inject(ToastService);
 
-  public SampleMovies = signal<any[]>([]);
+  public SampleMovies = signal<Movie[]>([]);
   public isLoading = signal<boolean>(true);
   public termoPesquisa = signal<string>('');
-  public filmesSelecionados = signal<any[]>([]);
-  public filmeSorteado = signal<any | null>(null);
+  public filmesSelecionados = signal<Movie[]>([]);
+  public filmeSorteado = signal<Movie | null>(null);
   public estaSorteando = signal<boolean>(false);
   public isSubmitting = signal<boolean>(false);
   public mostrarSetaEsquerda = signal<boolean>(false);
@@ -110,7 +111,7 @@ export class Dashboard implements OnInit, OnDestroy {
     }
   }
 
-  public adicionarFilmeALista(filme: any): void {
+  public adicionarFilmeALista(filme: Movie): void {
     const jaExiste = this.filmesSelecionados().some(item => item.id === filme.id);
 
     if (jaExiste) {
@@ -154,7 +155,7 @@ export class Dashboard implements OnInit, OnDestroy {
   /**
    * Pula o sorteio e confirma o filme selecionado diretamente no banco
    */
-  public escolherFilmeDiretamente(filme: any): void {
+  public escolherFilmeDiretamente(filme: Movie): void {
     if (!filme) return;
 
     this.foiEscolhaManual.set(true); // Marca que o fluxo atual veio de uma escolha manual

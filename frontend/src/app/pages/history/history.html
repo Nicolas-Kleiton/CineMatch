@@ -115,16 +115,16 @@
     </section>
   </main>
 
-  @if (exibindoModal() && sessaoSelecionada()) {
+  @if (exibindoModal() && sessaoSelecionada(); as sessao) {
     <div class="modal-backdrop">
       <div class="modal-box">
         <div class="modal-header">
-          <h2>{{ sessaoSelecionada().status === 'assistido' ? 'Editar Avaliação ✏️' : 'Avaliar Filme 🌟' }}</h2>
+          <h2>{{ sessao.status === 'assistido' ? 'Editar Avaliação ✏️' : 'Avaliar Filme 🌟' }}</h2>
           <button class="btn-close" (click)="fecharModal()">✕</button>
         </div>
         
         <div class="modal-body">
-          <p>O que você achou de <strong>{{ sessaoSelecionada().title }}</strong>?</p>
+          <p>O que você achou de <strong>{{ sessao.title }}</strong>?</p>
           
           <div class="form-group">
             <label>Sua nota (de 1 a 5 estrelas):</label>

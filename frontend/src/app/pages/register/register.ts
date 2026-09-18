@@ -17,9 +17,9 @@ export class Register {
   private toastService = inject(ToastService);
 
   protected registerForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
   });
 
   public isSubmitting = signal<boolean>(false);
@@ -29,7 +29,7 @@ export class Register {
     if(this.registerForm.valid) {
       this.isSubmitting.set(true);
       this.registerError.set(null);
-      this.authService.register(this.registerForm.value).subscribe({
+      this.authService.register(this.registerForm.getRawValue()).subscribe({
         next: (response) => {
           this.toastService.show('Cadastro realizado com sucesso!', 'success');
           console.log('Usuário cadastrado com sucesso!', response);

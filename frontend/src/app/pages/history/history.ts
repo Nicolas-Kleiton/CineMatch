@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie';
+import { MovieSession } from '../../models/movie-session';
 
 @Component({
   selector: 'app-history',
@@ -16,12 +17,12 @@ export class History implements OnInit {
   private router = inject(Router);
 
   // Signal para armazenar todas as sessões vindas do banco
-  public sessoes = signal<any[]>([]);
+  public sessoes = signal<MovieSession[]>([]);
   public isLoadingHistory = signal<boolean>(true);
 
   // Signals para controlar o estado do Modal de Avaliação
   public exibindoModal = signal<boolean>(false);
-  public sessaoSelecionada = signal<any | null>(null);
+  public sessaoSelecionada = signal<MovieSession | null>(null);
   
   // Campos do formulário de avaliação
   public notaSelecionada = signal<number>(5);
@@ -52,12 +53,12 @@ export class History implements OnInit {
   /**
    * Abre o modal de feedback para o filme pendente selecionado
    */
-  public abrirModalAvaliacao(sessao: any): void {
+  public abrirModalAvaliacao(sessao: MovieSession): void {
     this.sessaoSelecionada.set(sessao);
     
     // Se o status for 'assistido', carrega os dados já salvos para edição
     if (sessao.status === 'assistido') {
-      this.notaSelecionada.set(sessao.rating);
+      this.notaSelecionada.set(sessao.rating ?? 5);
       this.comentarioOriginal.set(sessao.comment || '');
     } else {
       // Se for pendente, inicia o formulário limpo

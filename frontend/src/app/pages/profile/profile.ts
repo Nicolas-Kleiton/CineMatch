@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { ToastService } from '../../services/toast';
+import { ProfileUpdateData, User } from '../../models/user';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,7 @@ export class Profile implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   public isEditing = false;
-  public currentUser: any = { name: '', email: '' };
+  public currentUser: Pick<User, 'name' | 'email'> = { name: '', email: '' };
 
   protected profileForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -49,7 +50,7 @@ export class Profile implements OnInit {
     });
   }
 
-  private atualizarCampos(user: any): void {
+  private atualizarCampos(user: User): void {
     this.currentUser = user;
     this.profileForm.patchValue({
       name: user.name,
@@ -96,10 +97,10 @@ export class Profile implements OnInit {
         return;
       }
 
-      const dados: any = { name: formValue.name, email: formValue.email };
+      const dados: ProfileUpdateData = { name: formValue.name ?? '', email: formValue.email ?? '' };
       if (formValue.password) {
         dados.password = formValue.password;
-        dados.password_confirmation = formValue.password_confirmation;
+        dados.password_confirmation = formValue.password_confirmation ?? '';
       }
 
       this.authService.atualizarPerfil(dados).subscribe({

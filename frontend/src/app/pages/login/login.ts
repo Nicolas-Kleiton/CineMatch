@@ -16,8 +16,8 @@ export class Login {
   private toastService = inject(ToastService);
 
   protected loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
 
   public isSubmitting = signal<boolean>(false);
@@ -28,7 +28,7 @@ export class Login {
     if (this.loginForm.valid) {
       this.isSubmitting.set(true);
       this.loginError.set(null);
-      this.authService.login(this.loginForm.value).subscribe({
+      this.authService.login(this.loginForm.getRawValue()).subscribe({
         next: (response) => {
           console.log('Login realizado com sucesso!', response);
           localStorage.setItem('cinematch_token', response.access_token);
