@@ -64,18 +64,17 @@ class MovieController extends Controller
         ]);
 
         $session = MovieSession::create([
-        'user_id'     => Auth::id(), // Pega o ID do usuário logado no momento
-        'tmdb_id'     => $validated['tmdb_id'],
-        'title'       => $validated['title'],
-        'poster_path' => $validated['poster_path'],
-        'status'      => 'pendente'  // Nasce como pendente até ser assistido
-    ]);
+            'user_id'     => Auth::id(), // Pega o ID do usuário logado no momento
+            'tmdb_id'     => $validated['tmdb_id'],
+            'title'       => $validated['title'],
+            'poster_path' => $validated['poster_path'],
+            'status'      => 'pendente'  // Nasce como pendente até ser assistido
+        ]);
 
-    return response()->json([
-        'message' => 'Sessão de filme confirmada com sucesso!',
-        'session' => $session
-    ],201);
-
+        return response()->json([
+            'message' => 'Sessão de filme confirmada com sucesso!',
+            'session' => $session
+        ], 201);
     }
 
     /**
@@ -84,8 +83,8 @@ class MovieController extends Controller
     public function history()
     {
         $history = MovieSession::where('user_id', Auth::id())
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return response()->json($history);
     }
