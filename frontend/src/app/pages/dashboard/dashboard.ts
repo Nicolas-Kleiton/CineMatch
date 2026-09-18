@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, OnDestroy, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, OnDestroy, computed, viewChild, ElementRef, afterRenderEffect } from '@angular/core';
 import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie';
 import { ToastService } from '../../services/toast';
@@ -43,8 +43,21 @@ export class Dashboard implements OnInit, OnDestroy {
     return this.podeDarScrollDireita();
   });
 
+  // O carrossel só existe no DOM quando há filmes carregados
+  private carrossel = viewChild<ElementRef<HTMLElement>>('carrossel');
+
   private pesquisadorSubject = new Subject<string>();
   private pesquisaSubscription!: Subscription;
+
+  constructor() {
+    // Recalcula as setas sempre que o carrossel é (re)renderizado, ex.: após uma busca
+    afterRenderEffect(() => {
+      const elemento = this.carrossel()?.nativeElement;
+      if (elemento) {
+        this.checarLimitesScroll(elemento);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.obterCatalogoFilmes();
@@ -91,12 +104,6 @@ export class Dashboard implements OnInit, OnDestroy {
     this.movieService.searchMovies(termo).subscribe({
       next: (resultados) => {
         this.SampleMovies.set(resultados);
-
-        const container = document.querySelector('.carousel-container') as HTMLElement;
-        if (container) {
-          container.scrollLeft = 0;
-          setTimeout(() => this.checarLimitesScroll(container), 50);
-        }
         this.isLoading.set(false);
       },
       error: (erro) => {
