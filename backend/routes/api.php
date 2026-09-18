@@ -24,6 +24,9 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::put('/movie-sessions/{id}/evaluate', [MovieController::class, 'evaluate']);
     Route::delete('/movie-sessions/{id}', [MovieController::class, 'destroy']);
 
+    // Encerra a sessão revogando o token atual
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     // Rota para atualizar e ler o perfil
     Route::get('/user/me', [AuthController::class, 'me']);
     Route::put('/user/profile', [AuthController::class, 'updateProfile']);

@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
+    // Tempo de vida dos tokens de acesso
+    private const DIAS_VALIDADE_TOKEN = 7;
+
     public function register(Request $request)
     {
         $request->validate([
@@ -44,7 +48,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $this->emitirToken($user);
 
         return response()->json([
             'message' => 'Login efetuado com sucesso!',
@@ -70,7 +74,7 @@ class AuthController extends Controller
         // Limpa o histórico antigo toda vez que alguém clica no botão "Visitante"
         \App\Models\MovieSession::where('user_id', $user->id)->delete();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $this->emitirToken($user);
 
         return response()->json([
             'message' => 'Login de visitante efetuado com sucesso!',
@@ -126,6 +130,18 @@ class AuthController extends Controller
     }
 
     /**
+     * Revoga o token usado na requisição atual
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout efetuado com sucesso!'
+        ], 200);
+    }
+
+    /**
      * Retorna os dados do usuário atualmente logado
      */
     public function me(Request $request)
@@ -133,5 +149,24 @@ class AuthController extends Controller
         return response()->json([
             'user' => $request->user()
         ], 200);
+    }
+
+    /**
+     * Cria um token com prazo de validade e remove os tokens vencidos,
+     * evitando que a tabela de tokens cresça indefinidamente
+     */
+    private function emitirToken(User $user): string
+    {
+        $limite = now()->subDays(self::DIAS_VALIDADE_TOKEN);
+
+        PersonalAccessToken::where('expires_at', '<', now())
+            ->orWhere(fn ($query) => $query->whereNull('expires_at')->where('created_at', '<', $limite))
+            ->delete();
+
+        return $user->createToken(
+            'auth_token',
+            ['*'],
+            now()->addDays(self::DIAS_VALIDADE_TOKEN)
+        )->plainTextToken;
     }
 }
