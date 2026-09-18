@@ -19,6 +19,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Rate Limiter Cache Store
+    |--------------------------------------------------------------------------
+    |
+    | Os contadores do rate limiting ficam em arquivo local em vez do banco.
+    | Com o MySQL remoto, usar o store "database" adicionava de 6 a 8 consultas
+    | (cerca de 2 segundos) a cada requisição da API.
+    |
+    */
+
+    'limiter' => env('CACHE_LIMITER', 'file'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache Stores
     |--------------------------------------------------------------------------
     |
