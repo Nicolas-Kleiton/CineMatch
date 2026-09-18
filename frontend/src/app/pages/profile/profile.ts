@@ -19,7 +19,7 @@ export class Profile implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   public isEditing = false;
-  public currentUser: Pick<User, 'name' | 'email'> = { name: '', email: '' };
+  public currentUser: Pick<User, 'name' | 'email' | 'is_guest'> = { name: '', email: '', is_guest: false };
 
   protected profileForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -68,7 +68,7 @@ export class Profile implements OnInit {
   }
 
   public toggleEdit(): void {
-    if (this.currentUser?.email === 'visitante@cinematch.com') {
+    if (this.currentUser.is_guest) {
       this.toastService.show('O perfil de Visitante não pode ser alterado.', 'error');
       return;
     }

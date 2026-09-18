@@ -24,7 +24,7 @@
           
           <div class="info-group">
             <label>E-mail</label>
-            <p class="info-text">{{ currentUser.email || 'Não informado' }}</p>
+            <p class="info-text">{{ currentUser.is_guest ? 'Conta temporária de visitante' : (currentUser.email || 'Não informado') }}</p>
           </div>
 
           <div class="action-buttons view-mode">

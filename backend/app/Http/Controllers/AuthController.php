@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -12,6 +13,9 @@ class AuthController extends Controller
 {
     // Tempo de vida dos tokens de acesso
     private const DIAS_VALIDADE_TOKEN = 7;
+
+    // Contas de visitante são temporárias e removidas após esse período
+    private const DIAS_VALIDADE_VISITANTE = 1;
 
     public function register(Request $request)
     {
@@ -59,22 +63,22 @@ class AuthController extends Controller
     }
 
     /**
-     * Login rápido e automático para Visitantes (Portfólio)
+     * Login rápido e automático para Visitantes (Portfólio).
+     * Cada visitante recebe uma conta temporária própria, para que
+     * pessoas testando ao mesmo tempo não interfiram umas nas outras.
      */
     public function guestLogin()
     {
-        $user = User::firstOrCreate(
-            ['email' => 'visitante@cinematch.com'],
-            [
-                'name' => 'Visitante',
-                'password' => Hash::make('visitante123')
-            ]
-        );
+        $this->removerVisitantesAntigos();
 
-        // Limpa o histórico antigo toda vez que alguém clica no botão "Visitante"
-        \App\Models\MovieSession::where('user_id', $user->id)->delete();
+        $user = User::forceCreate([
+            'name' => 'Visitante',
+            'email' => 'visitante-' . Str::uuid() . '@cinematch.local',
+            'password' => Str::random(32),
+            'is_guest' => true,
+        ]);
 
-        $token = $this->emitirToken($user);
+        $token = $this->emitirToken($user, self::DIAS_VALIDADE_VISITANTE);
 
         return response()->json([
             'message' => 'Login de visitante efetuado com sucesso!',
@@ -92,7 +96,7 @@ class AuthController extends Controller
         $user = $request->user();
 
         // Bloqueia qualquer tentativa de edição no perfil de visitante (Portfólio)
-        if ($user->email === 'visitante@cinematch.com') {
+        if ($user->is_guest) {
             return response()->json([
                 'message' => 'O perfil de Visitante é bloqueado para edições.'
             ], 403);
@@ -155,7 +159,7 @@ class AuthController extends Controller
      * Cria um token com prazo de validade e remove os tokens vencidos,
      * evitando que a tabela de tokens cresça indefinidamente
      */
-    private function emitirToken(User $user): string
+    private function emitirToken(User $user, int $dias = self::DIAS_VALIDADE_TOKEN): string
     {
         $limite = now()->subDays(self::DIAS_VALIDADE_TOKEN);
 
@@ -166,7 +170,28 @@ class AuthController extends Controller
         return $user->createToken(
             'auth_token',
             ['*'],
-            now()->addDays(self::DIAS_VALIDADE_TOKEN)
+            now()->addDays($dias)
         )->plainTextToken;
+    }
+
+    /**
+     * Apaga as contas de visitante expiradas junto com seus tokens.
+     * As sessões de filme são removidas em cascata pela foreign key.
+     */
+    private function removerVisitantesAntigos(): void
+    {
+        $idsExpirados = User::where('is_guest', true)
+            ->where('created_at', '<', now()->subDays(self::DIAS_VALIDADE_VISITANTE))
+            ->pluck('id');
+
+        if ($idsExpirados->isEmpty()) {
+            return;
+        }
+
+        PersonalAccessToken::where('tokenable_type', User::class)
+            ->whereIn('tokenable_id', $idsExpirados)
+            ->delete();
+
+        User::whereIn('id', $idsExpirados)->delete();
     }
 }
